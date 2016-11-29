@@ -5,6 +5,15 @@ import jus.poc.prodcons._Producteur;
 
 public class Buffer_circ implements Tampon {
 
+	Message[] _buff;
+	int _size;
+
+	public Buffer_circ(int size)
+	{
+		_size = size;
+		_buff = new Message[size];
+	}
+
 	@Override
 	public int enAttente() {
 		// TODO Auto-generated method stub
@@ -25,8 +34,7 @@ public class Buffer_circ implements Tampon {
 
 	@Override
 	public int taille() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _size;
 	}
 
 }
