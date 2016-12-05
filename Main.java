@@ -1,3 +1,4 @@
+import Qone.TestProdCons;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
 
@@ -9,7 +10,9 @@ public class Main extends Simulateur {
 	}
 
 	public static void main(String[] args) {
-		System.out.print("Hello world!");
+		System.out.println("Hello world!");
+		new TestProdCons(new Observateur()).start();
+		System.out.println("Done.");
 	}
 
 	@Override

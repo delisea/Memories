@@ -1,4 +1,4 @@
-import java.util.Map;
+package Qone;
 import java.util.Properties;
 
 import jus.poc.prodcons.*;
@@ -11,11 +11,21 @@ public class TestProdCons extends Simulateur {
 	}
 
 	protected void run() throws Exception{
+		Observateur obs = new Observateur();
+		Aleatoire alea = new Aleatoire(5, 3);
+		System.out.println("INIT");
+		int fin = 0;
+		Buffer_circ b = new Buffer_circ(100);
+		for(fin =0; fin<3; fin++)
+			new FProd(alea, b, obs, 10, 5).start();
+		for(fin =0; fin<3; fin++)
+			new FCons(b, obs, 10, 5).start();
 
-	}
-	
-	public static void main(String[] args){
-		new TestProdCons(new Observateur()).start();
+		System.out.println("START");
+		synchronized(Buffer_circ.Global_lock)
+		{
+			Buffer_circ.Global_lock.notifyAll();
+		}
 	}
 
 	protected static Integer option;

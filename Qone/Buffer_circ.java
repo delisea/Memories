@@ -1,3 +1,4 @@
+package Qone;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -5,10 +6,13 @@ import jus.poc.prodcons._Producteur;
 
 public class Buffer_circ implements Tampon {
 
+	static public final Object Global_lock = new Object();
+
 	Message[] _buff;
 	int _size;
 	int _S;
 	int _N;
+	int _att;
 
 	public Buffer_circ(int size)
 	{
@@ -16,16 +20,16 @@ public class Buffer_circ implements Tampon {
 		_buff = new Message[size];
 		_S = 0;
 		_N = 0;
+		_att = 0;
 	}
 
 	@Override
 	public int enAttente() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _att;
 	}
 
 	@Override
-	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
+	public synchronized Message get(_Consommateur arg0) {
 		Message ret;
 		if(_S!=_N)
 		{
@@ -36,22 +40,33 @@ public class Buffer_circ implements Tampon {
 		}
 		else
 		{
-			wait();
+			_att++;
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			_att--;
 			return get(arg0);
 		}
 	}
 
 	@Override
-	public void put(_Producteur arg0, Message arg1) throws Exception, InterruptedException {
+	public synchronized void put(_Producteur arg0, Message arg1) {
 		if(_S!=(_N+1)%_size)
 		{
 			_buff[_N] = arg1;
 			_N = (_N+1)%_size;
-			notify();
+			notifyAll();
 		}
 		else
 		{
-			wait();
+			System.out.println("taken");
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			put(arg0, arg1);
 		}
 
