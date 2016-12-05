@@ -21,8 +21,7 @@ public class FCons extends Acteur implements _Consommateur {
 
 	protected void consume()
 	{
-		System.out.println(identification() + "C: I want read.");
-		System.out.println(identification() + "C: I read ->" + _buffer.get(this));
+		_buffer.get(this)
 		_nbM++;
 		try {
 			sleep(RANDCONS.next()*1000);
