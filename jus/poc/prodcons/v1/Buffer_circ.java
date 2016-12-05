@@ -33,6 +33,7 @@ public class Buffer_circ implements Tampon {
 		Message ret;
 		if(_S!=_N)
 		{
+			_att--;
 			ret = _buff[_S];
 			_S = (_S+1)%_size;
 			notify();
@@ -40,13 +41,11 @@ public class Buffer_circ implements Tampon {
 		}
 		else
 		{
-			_att++;
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			_att--;
 			return get(arg0);
 		}
 	}
@@ -55,6 +54,7 @@ public class Buffer_circ implements Tampon {
 	public synchronized void put(_Producteur arg0, Message arg1) {
 		if(_S!=(_N+1)%_size)
 		{
+			_att++;
 			_buff[_N] = arg1;
 			_N = (_N+1)%_size;
 			notifyAll();
