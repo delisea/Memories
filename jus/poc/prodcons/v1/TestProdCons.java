@@ -17,9 +17,9 @@ public class TestProdCons extends Simulateur {
 		int fin = 0;
 		Buffer_circ b = new Buffer_circ(100);
 		for(fin =0; fin<3; fin++)
-			new FProd(b, obs, tempsMoyenProduction, deviationTempsMoyenProduction).start();
+			new FProd(b, obs, 3, 2).start();
 		for(fin =0; fin<3; fin++)
-			new FCons(b, obs, tempsMoyenConsommation, deviationTempsMoyenConsommation).start();
+			new FCons(b, obs, 3, 2).start();
 
 		// gérer mieux le cas ou ça start avant l'init de run
 		Thread.sleep(1000);
@@ -96,7 +96,7 @@ public class TestProdCons extends Simulateur {
 			}
 		}
 		Properties opt = new Properties("jus/poc/prodcons/options/"+file);
-		
+
 		nbProd = opt.get("nbProd");
 		nbCons = opt.get("nbCons");
 		nbBuffer = opt.get("nbBuffer");
