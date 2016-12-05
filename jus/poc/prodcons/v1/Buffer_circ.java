@@ -1,4 +1,4 @@
-package Qone;
+package jus.poc.prodcons.v1;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;

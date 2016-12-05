@@ -1,4 +1,4 @@
-package Qone;
+package jus.poc.prodcons.v1;
 
 public class GMessage implements jus.poc.prodcons.Message {
 	String _msg;

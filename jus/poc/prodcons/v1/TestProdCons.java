@@ -1,4 +1,4 @@
-package Qone;
+package jus.poc.prodcons.v1;
 import java.util.Properties;
 
 import jus.poc.prodcons.*;
@@ -17,7 +17,7 @@ public class TestProdCons extends Simulateur {
 		int fin = 0;
 		Buffer_circ b = new Buffer_circ(100);
 		for(fin =0; fin<3; fin++)
-			new FProd(alea, b, obs, 10, 5).start();
+			new FProd(b, obs, 10, 5).start();
 		for(fin =0; fin<3; fin++)
 			new FCons(b, obs, 10, 5).start();
 

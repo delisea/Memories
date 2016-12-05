@@ -1,4 +1,4 @@
-package Qone;
+package jus.poc.prodcons.v1;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -7,12 +7,7 @@ import jus.poc.prodcons._Consommateur;
 
 public class FCons extends Acteur implements _Consommateur {
 
-	static int _NID = 0;
-	static int nextID()
-	{
-		_NID++;
-		return _NID - 1;
-	}
+	private static Aleatoire RANDCONS = new Aleatoire(10, 5);
 
 	int _nbM;
 	Buffer_circ _buff;

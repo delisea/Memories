@@ -1,4 +1,4 @@
-package Qone;
+package jus.poc.prodcons.v1;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -7,24 +7,26 @@ import jus.poc.prodcons._Producteur;
 
 public class FProd extends Acteur implements _Producteur {
 
+	private static Aleatoire RANDPROD = new Aleatoire(10, 5);
+
 	Buffer_circ _buff;
 	int _nbM;
 
-	public FProd(Aleatoire alea, Buffer_circ buffer, Observateur observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement) throws ControlException
+	public FProd(Buffer_circ buffer, Observateur observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
-		_nbM = alea.next();
+		_nbM = Aleatoire.valeur(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		_buff = buffer;
 	}
 
 	protected void produce()
 	{
-		System.out.println(identification() + ": i want produce.");
+		System.out.println(identification() + ": I want produce.");
 		_buff.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
 		_nbM--;
-		System.out.println(identification() + ": i have produced.");
+		System.out.println(identification() + ": I have produced.");
 		try {
-			sleep(1);
+			sleep(RANDPROD.next());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
