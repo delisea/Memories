@@ -7,28 +7,44 @@ import jus.poc.prodcons._Producteur;
 
 public class FProd extends Acteur implements _Producteur {
 
+	private static int _processing = 0;
+
+	private static void add_processing()
+	{
+		_processing++;
+	}
+
+	private static void remove_processing()
+	{
+		_processing--;
+	}
+
+	public static int get_processing()
+	{
+		return _processing;
+	}
+
 	private static Aleatoire RANDPROD = new Aleatoire(10, 5);
 
-	Buffer_circ _buff;
+	Buffer_circ _buffer;
 	int _nbM;
 
 	public FProd(Buffer_circ buffer, Observateur observateur, int moyenneTempsDeTraitement, int deviationTempsDeTraitement) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		_nbM = Aleatoire.valeur(moyenneTempsDeTraitement, deviationTempsDeTraitement);
-		_buff = buffer;
+		_buffer = buffer;
 	}
 
 	protected void produce()
 	{
 		System.out.println(identification() + ": I want produce.");
-		_buff.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
+		_buffer.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
 		_nbM--;
 		System.out.println(identification() + ": I have produced.");
 		try {
 			sleep(RANDPROD.next());
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -55,6 +71,8 @@ public class FProd extends Acteur implements _Producteur {
 
 	@Override
 	public void run() {
+		add_processing();
+
 		synchronized(Buffer_circ.Global_lock)
 		{
 			try {
@@ -63,10 +81,17 @@ public class FProd extends Acteur implements _Producteur {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(identification() + "P: je démarre");
+		System.out.println(identification() + "P: je démarre et j'ai " + _nbM + " paquets.");
 		while(_nbM>0)
 		{
 			produce();
+		}
+
+		remove_processing();
+
+		synchronized(_buffer)
+		{
+			_buffer.notifyAll();
 		}
 	}
 
