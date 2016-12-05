@@ -7,7 +7,7 @@ import jus.poc.prodcons._Consommateur;
 
 public class FCons extends Acteur implements _Consommateur {
 
-	private static Aleatoire RANDCONS = new Aleatoire(10, 5);
+	private static Aleatoire RANDCONS = new Aleatoire(5, 2);
 
 	int _nbM;
 	Buffer_circ _buffer;
@@ -25,7 +25,7 @@ public class FCons extends Acteur implements _Consommateur {
 		System.out.println(identification() + "C: I read ->" + _buffer.get(this));
 		_nbM++;
 		try {
-			sleep(RANDCONS.next());
+			sleep(RANDCONS.next()*1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
