@@ -24,7 +24,7 @@ public class FProd extends Acteur implements _Producteur {
 		return _processing;
 	}
 
-	private static Aleatoire RANDPROD = new Aleatoire(5, 2);
+	private static Aleatoire RANDPROD = new Aleatoire(2, 1);
 
 	Buffer_circ _buffer;
 	int _nbM;
@@ -41,7 +41,7 @@ public class FProd extends Acteur implements _Producteur {
 		_buffer.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
 		_nbM--;
 		try {
-			sleep(RANDPROD.next()*1000);
+			sleep(RANDPROD.next());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
