@@ -21,6 +21,8 @@ public class TestProdCons extends Simulateur {
 		for(fin =0; fin<3; fin++)
 			new FCons(b, obs, tempsMoyenConsommation, deviationTempsMoyenConsommation).start();
 
+		// gérer mieux le cas ou ça start avant l'init de run
+		Thread.sleep(1000);
 		System.out.println("START");
 		synchronized(Buffer_circ.Global_lock)
 		{
@@ -39,7 +41,7 @@ public class TestProdCons extends Simulateur {
 	protected static Integer nbBuffer;
 	protected static int getNbBuffer(){
 		return nbBuffer;
-	}	
+	}
 	protected static Integer tempsMoyenProduction;
 	protected static int getTempsMoyenProduction(){
 		return tempsMoyenProduction;
@@ -72,7 +74,7 @@ public class TestProdCons extends Simulateur {
 	protected static int getDeviationNombreMoyenNbExemplaire(){
 		return deviationNombreMoyenNbExemplaire;
 	}
-	
+
 	/**
 	* Retreave the parameters of the application.
 	* @param file the final name of the file containing the options.
@@ -107,5 +109,5 @@ public class TestProdCons extends Simulateur {
 		nombreMoyenNbExemplaire = opt.get("nombreMoyenNbExemplaire");
 		deviationNombreMoyenNbExemplaire = opt.get("deviationNombreMoyenNbExemplaire");
 	}
-	
+
 }

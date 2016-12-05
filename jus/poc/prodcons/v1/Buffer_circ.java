@@ -31,23 +31,19 @@ public class Buffer_circ implements Tampon {
 	@Override
 	public synchronized Message get(_Consommateur arg0) {
 		Message ret;
-		if(_S!=_N)
-		{
-			_att--;
-			ret = _buff[_S];
-			_S = (_S+1)%_size;
-			notify();
-			return ret;
-		}
-		else
+		while(_att == 0)
 		{
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			return get(arg0);
 		}
+		_att--;
+		ret = _buff[_S];
+		_S = (_S+1)%_size;
+		notify();
+		return ret;
 	}
 
 	@Override
