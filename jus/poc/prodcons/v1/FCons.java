@@ -63,10 +63,11 @@ public class FCons extends Acteur implements _Consommateur {
 		}
 		System.out.println(identification() + "C: je démarre");
 
-		while(FProd.get_processing()>0 && _buffer.enAttente()>0)
+		while(FProd.get_processing()>0 || _buffer.enAttente()>0)
 		{
 			consume();
 		}
+		System.out.println(identification() + "C: I leave");
 
 	}
 

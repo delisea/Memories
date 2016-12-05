@@ -52,14 +52,8 @@ public class Buffer_circ implements Tampon {
 
 	@Override
 	public synchronized void put(_Producteur arg0, Message arg1) {
-		if(_S!=(_N+1)%_size)
-		{
-			_att++;
-			_buff[_N] = arg1;
-			_N = (_N+1)%_size;
-			notifyAll();
-		}
-		else
+		System.out.println(arg0.identification() + ": I want produce.");
+		while(_size - _att == 0)
 		{
 			System.out.println("taken");
 			try {
@@ -67,9 +61,13 @@ public class Buffer_circ implements Tampon {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			put(arg0, arg1);
 		}
 
+		_att++;
+		_buff[_N] = arg1;
+		_N = (_N+1)%_size;
+		notifyAll();
+		System.out.println(arg0.identification() + ": I have produced.");
 	}
 
 	@Override
