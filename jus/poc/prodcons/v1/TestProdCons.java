@@ -28,8 +28,51 @@ public class TestProdCons extends Simulateur {
 		}
 	}
 
-	protected static Integer option;
-
+	protected static Integer nbProd;
+	protected static int getNbProd(){
+		return nbProd;
+	}
+	protected static Integer nbCons;
+	protected static int getNbCons(){
+		return nbCons;
+	}
+	protected static Integer nbBuffer;
+	protected static int getNbBuffer(){
+		return nbBuffer;
+	}	
+	protected static Integer tempsMoyenProduction;
+	protected static int getTempsMoyenProduction(){
+		return tempsMoyenProduction;
+	}
+	protected static Integer deviationTempsMoyenProduction;
+	protected static int getDeviationTempsMoyenProduction(){
+		return deviationTempsMoyenProduction;
+	}
+	protected static Integer tempsMoyenConsommation;
+	protected static int getTempsMoyenConsommation(){
+		return tempsMoyenConsommation;
+	}
+	protected static Integer deviationTempsMoyenConsommation;
+	protected static int getDeviationTempsMoyenConsommation(){
+		return deviationTempsMoyenConsommation;
+	}
+	protected static Integer nombreMoyenDeProduction;
+	protected static int getNombreMoyenDeProduction(){
+		return nombreMoyenDeProduction;
+	}
+	protected static Integer deviationNombreMoyenDeProduction;
+	protected static int getDeviationNombreMoyenDeProduction(){
+		return deviationNombreMoyenDeProduction;
+	}
+	protected static Integer nombreMoyenNbExemplaire;
+	protected static int getNombreMoyenNbExemplaire(){
+		return nombreMoyenNbExemplaire;
+	}
+	protected static Integer deviationNombreMoyenNbExemplaire;
+	protected static int getDeviationNombreMoyenNbExemplaire(){
+		return deviationNombreMoyenNbExemplaire;
+	}
+	
 	/**
 	* Retreave the parameters of the application.
 	* @param file the final name of the file containing the options.
@@ -51,9 +94,17 @@ public class TestProdCons extends Simulateur {
 			}
 		}
 		Properties opt = new Properties("jus/poc/prodcons/options/"+file);
-		option = opt.get("option");
-
+		nbProd = opt.get("nbProd");
+		nbCons = opt.get("nbCons");
+		nbBuffer = opt.get("nbBuffer");
+		tempsMoyenProduction = opt.get("tempsMoyenProduction");
+		deviationTempsMoyenProduction = opt.get("deviationTempsMoyenProduction");
+		tempsMoyenConsommation = opt.get("tempsMoyenConsommation");
+		deviationTempsMoyenConsommation = opt.get("deviationTempsMoyenConsommation");
+		nombreMoyenDeProduction = opt.get("nombreMoyenDeProduction");
+		deviationNombreMoyenDeProduction = opt.get("deviationNombreMoyenDeProduction");
+		nombreMoyenNbExemplaire = opt.get("nombreMoyenNbExemplaire");
+		deviationNombreMoyenNbExemplaire = opt.get("deviationNombreMoyenNbExemplaire");
 	}
-
-
+	
 }
