@@ -11,15 +11,15 @@ public class TestProdCons extends Simulateur {
 	}
 
 	protected void run() throws Exception{
+		init("options.xml");
 		Observateur obs = new Observateur();
-		Aleatoire alea = new Aleatoire(5, 3);
 		System.out.println("INIT");
 		int fin = 0;
 		Buffer_circ b = new Buffer_circ(100);
 		for(fin =0; fin<3; fin++)
-			new FProd(b, obs, 10, 5).start();
+			new FProd(b, obs, tempsMoyenProduction, deviationTempsMoyenProduction).start();
 		for(fin =0; fin<3; fin++)
-			new FCons(b, obs, 10, 5).start();
+			new FCons(b, obs, tempsMoyenConsommation, deviationTempsMoyenConsommation).start();
 
 		System.out.println("START");
 		synchronized(Buffer_circ.Global_lock)
@@ -94,6 +94,7 @@ public class TestProdCons extends Simulateur {
 			}
 		}
 		Properties opt = new Properties("jus/poc/prodcons/options/"+file);
+		
 		nbProd = opt.get("nbProd");
 		nbCons = opt.get("nbCons");
 		nbBuffer = opt.get("nbBuffer");
