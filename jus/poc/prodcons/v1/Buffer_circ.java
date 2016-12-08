@@ -14,6 +14,8 @@ public class Buffer_circ implements Tampon {
 	int _N;
 	int _att;
 
+	boolean _closed;
+
 	public Buffer_circ(int size)
 	{
 		_size = size;
@@ -21,6 +23,12 @@ public class Buffer_circ implements Tampon {
 		_S = 0;
 		_N = 0;
 		_att = 0;
+		_closed = false;
+	}
+
+	public void close()
+	{
+		_closed = true;
 	}
 
 	@Override
@@ -34,6 +42,9 @@ public class Buffer_circ implements Tampon {
 		System.out.println(arg0.identification() + "C: I want read.");
 		while(_att == 0)
 		{
+			if(_closed)
+				return null;
+
 			try {
 				wait();
 			} catch (InterruptedException e) {

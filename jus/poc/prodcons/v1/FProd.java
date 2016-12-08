@@ -86,6 +86,8 @@ public class FProd extends Acteur implements _Producteur {
 		}
 
 		remove_processing();
+		if(get_processing() == 0)
+			_buffer.close();
 		System.out.println(identification() + "P: je part.");
 
 		synchronized(_buffer)

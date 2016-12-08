@@ -2,6 +2,7 @@ package jus.poc.prodcons.v1;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
+import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
 
@@ -19,15 +20,16 @@ public class FCons extends Acteur implements _Consommateur {
 		_buffer = buffer;
 	}
 
-	protected void consume()
+	protected Message consume()
 	{
-		_buffer.get(this);
+		Message ret = _buffer.get(this);
 		_nbM++;
 		try {
 			sleep(RANDCONS.next()*1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		return ret;
 	}
 
 	@Override
@@ -62,10 +64,11 @@ public class FCons extends Acteur implements _Consommateur {
 		}
 		System.out.println(identification() + "C: je démarre");
 
-		while(FProd.get_processing()>0 || _buffer.enAttente()>0)
+		Message ret;
+		do
 		{
-			consume();
-		}
+			ret = consume();
+		} while(ret != null);
 		System.out.println(identification() + "C: I leave");
 
 	}

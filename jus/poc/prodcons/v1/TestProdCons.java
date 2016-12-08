@@ -3,6 +3,17 @@ import java.util.Properties;
 
 import jus.poc.prodcons.*;
 
+/*
+ * tester la commutation:
+ * 	faire le test avec des temps nuls
+ * 	on peut voir qu'il change de temps en temps
+ *
+ * prendre en compte les parametre taille buff nbC et nbP
+ *
+ *
+ * !!! taille tampon non gérer, o`u est l'option?
+*/
+
 public class TestProdCons extends Simulateur {
 
 	public TestProdCons(Observateur observateur) {
@@ -11,14 +22,14 @@ public class TestProdCons extends Simulateur {
 	}
 
 	protected void run() throws Exception{
-		init("options.xml");
+		//init("options.xml");
 		Observateur obs = new Observateur();
 		System.out.println("INIT");
 		int fin = 0;
-		Buffer_circ b = new Buffer_circ(100);
-		for(fin =0; fin<3; fin++)
+		Buffer_circ b = new Buffer_circ(nbBuffer);
+		for(fin =0; fin<nbProd; fin++)
 			new FProd(b, obs, 3, 2).start();
-		for(fin =0; fin<3; fin++)
+		for(fin =0; fin<nbCons; fin++)
 			new FCons(b, obs, 3, 2).start();
 
 		// gérer mieux le cas ou ça start avant l'init de run
