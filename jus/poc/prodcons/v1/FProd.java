@@ -50,7 +50,7 @@ public class FProd extends Acteur implements _Producteur {
 		_buffer.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
 		_nbM--;
 		try {
-			sleep(RANDPROD.next());
+			sleep(RANDPROD.next()*1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
