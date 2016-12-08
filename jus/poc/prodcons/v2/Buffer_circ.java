@@ -10,8 +10,8 @@ public class Buffer_circ implements Tampon {
 
 	static public int _nc;
 	static public int _np;
-	static public Object _lockP;
-	static public Object _lockC;
+	static public final Object _lockP = new Object();
+	static public final Object _lockC = new Object();
 
 	Message[] _buff;
 	int _size;
@@ -45,9 +45,9 @@ public class Buffer_circ implements Tampon {
 
 	@Override
 	public Message get(_Consommateur arg0) {
-		
+		Message ret;
+
 		synchronized(_lockC){
-			Message ret;
 			System.out.println(arg0.identification() + "C: I want read.");
 			if(_att == 0 || _nc > 0)
 			{
@@ -56,25 +56,26 @@ public class Buffer_circ implements Tampon {
 					return null;
 
 				try {
-					wait();
+					Buffer_circ._lockC.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				notify();
+				if(_att > 1) Buffer_circ._lockC.notify();
 				_nc--;
 			}
 			_att--;
 			ret = _buff[_S];
 			_S = (_S+1)%_size;
 			System.out.println(arg0.identification() + "C: I read ->" + ret);
-			return ret;
 		}
+		synchronized(_lockP){ Buffer_circ._lockP.notify(); }
+		return ret;
 	}
 
 	@Override
 	public void put(_Producteur arg0, Message arg1) {
 
-		synchronized(_lockP){
+		synchronized(Buffer_circ._lockP){
 			System.out.println(arg0.identification() + "P: I want produce.");
 
 			if(_size - _att == 0 || _np > 0)
@@ -82,11 +83,11 @@ public class Buffer_circ implements Tampon {
 				_np++;
 				System.out.println("taken");
 				try {
-					wait();
+					Buffer_circ._lockP.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				notify();
+				if(_size - _att > 1) Buffer_circ._lockP.notify();
 				_np--;
 			}
 
@@ -95,6 +96,7 @@ public class Buffer_circ implements Tampon {
 			_N = (_N+1)%_size;
 			System.out.println(arg0.identification() + "P: I have produced.");
 		}
+		synchronized(_lockC){ Buffer_circ._lockC.notify(); }
 	}
 
 	@Override

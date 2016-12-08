@@ -35,7 +35,7 @@ public class FProd extends Acteur implements _Producteur {
 	public FProd(Buffer_circ buffer, Observateur observateur, int nombreMoyenDeProduction, int deviationNombreDeProduction) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
-		_nbM = Aleatoire.valeur(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		_nbM = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreDeProduction);
 		_buffer = buffer;
 	}
 

@@ -8,10 +8,10 @@ import jus.poc.prodcons.*;
  * 	faire le test avec des temps nuls
  * 	on peut voir qu'il change de temps en temps
  *
- * prendre en compte les parametre taille buff nbC et nbP
  *
  *
- * !!! taille tampon non gérer, o`u est l'option?
+ * Attention deviation marche pas car aleatiore de merde
+ *
 */
 
 public class TestProdCons extends Simulateur {

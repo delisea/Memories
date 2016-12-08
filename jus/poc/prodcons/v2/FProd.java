@@ -28,14 +28,14 @@ public class FProd extends Acteur implements _Producteur {
 
 	Buffer_circ _buffer;
 	int _nbM;
-	int _dM;
+	int _dM; Attention deviation marche pas car aleatiore de merde
 	private static int _TM;
 	private static int _TdM;
 
 	public FProd(Buffer_circ buffer, Observateur observateur, int nombreMoyenDeProduction, int deviationNombreDeProduction) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
-		_nbM = Aleatoire.valeur(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		_nbM = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreDeProduction);
 		_buffer = buffer;
 	}
 
