@@ -63,7 +63,11 @@ public class FCons extends Acteur implements _Consommateur {
 	@Override
 	public void run() {
 
-		TestProdCons.getThr().join();
+		try {
+			TestProdCons.getThr().join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		System.out.println(identification() + "C: je démarre");
 

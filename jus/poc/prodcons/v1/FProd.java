@@ -80,7 +80,11 @@ public class FProd extends Acteur implements _Producteur {
 	public void run() {
 		add_processing();
 
-		TestProdCons.getThr().join();
+		try {
+			TestProdCons.getThr().join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		System.out.println(identification() + "P: je démarre et j'ai " + _nbM + " paquets.");
 		while(_nbM>0)
 		{

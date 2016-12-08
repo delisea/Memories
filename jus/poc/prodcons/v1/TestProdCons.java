@@ -22,7 +22,7 @@ public class TestProdCons extends Simulateur {
 	}
 
 	private static Thread Thr;
-	public static getThr(){
+	public static Thread getThr(){
 		return Thr;
 	}
 
