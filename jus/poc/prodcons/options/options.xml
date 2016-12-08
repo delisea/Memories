@@ -2,7 +2,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<comment>
-	Cette configuration ...
 	</comment>
 	<entry key="nbProd">1</entry>
 	<entry key="nbCons">10</entry>
