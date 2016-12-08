@@ -42,47 +42,47 @@ public class TestProdCons extends Simulateur {
 	}
 
 	protected static Integer nbProd;
-	protected static int getNbProd(){
+	public static int getNbProd(){
 		return nbProd;
 	}
 	protected static Integer nbCons;
-	protected static int getNbCons(){
+	public static int getNbCons(){
 		return nbCons;
 	}
 	protected static Integer nbBuffer;
-	protected static int getNbBuffer(){
+	public static int getNbBuffer(){
 		return nbBuffer;
 	}
 	protected static Integer tempsMoyenProduction;
-	protected static int getTempsMoyenProduction(){
+	public static int getTempsMoyenProduction(){
 		return tempsMoyenProduction;
 	}
 	protected static Integer deviationTempsMoyenProduction;
-	protected static int getDeviationTempsMoyenProduction(){
+	public static int getDeviationTempsMoyenProduction(){
 		return deviationTempsMoyenProduction;
 	}
 	protected static Integer tempsMoyenConsommation;
-	protected static int getTempsMoyenConsommation(){
+	public static int getTempsMoyenConsommation(){
 		return tempsMoyenConsommation;
 	}
 	protected static Integer deviationTempsMoyenConsommation;
-	protected static int getDeviationTempsMoyenConsommation(){
+	public static int getDeviationTempsMoyenConsommation(){
 		return deviationTempsMoyenConsommation;
 	}
 	protected static Integer nombreMoyenDeProduction;
-	protected static int getNombreMoyenDeProduction(){
+	public static int getNombreMoyenDeProduction(){
 		return nombreMoyenDeProduction;
 	}
 	protected static Integer deviationNombreMoyenDeProduction;
-	protected static int getDeviationNombreMoyenDeProduction(){
+	public static int getDeviationNombreMoyenDeProduction(){
 		return deviationNombreMoyenDeProduction;
 	}
 	protected static Integer nombreMoyenNbExemplaire;
-	protected static int getNombreMoyenNbExemplaire(){
+	public static int getNombreMoyenNbExemplaire(){
 		return nombreMoyenNbExemplaire;
 	}
 	protected static Integer deviationNombreMoyenNbExemplaire;
-	protected static int getDeviationNombreMoyenNbExemplaire(){
+	public static int getDeviationNombreMoyenNbExemplaire(){
 		return deviationNombreMoyenNbExemplaire;
 	}
 
