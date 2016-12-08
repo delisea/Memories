@@ -62,14 +62,9 @@ public class FCons extends Acteur implements _Consommateur {
 
 	@Override
 	public void run() {
-		synchronized(Buffer_circ.Global_lock)
-		{
-			try {
-				Buffer_circ.Global_lock.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+
+		TestProdCons.getThr().join();
+
 		System.out.println(identification() + "C: je démarre");
 
 		Message ret;

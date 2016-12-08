@@ -21,7 +21,13 @@ public class TestProdCons extends Simulateur {
 		// TODO Auto-generated constructor stub
 	}
 
+	private static Thread Thr;
+	public static getThr(){
+		return Thr;
+	}
+
 	protected void run() throws Exception{
+		Thr = Thread.currentThread();
 		init("options.xml");
 		Observateur obs = new Observateur();
 		System.out.println("INIT");
@@ -34,13 +40,7 @@ public class TestProdCons extends Simulateur {
 		for(fin =0; fin<nbCons; fin++)
 			new FCons(b, obs).start();
 
-		// gérer mieux le cas ou ça start avant l'init de run
-		Thread.sleep(1000);
 		System.out.println("START");
-		synchronized(Buffer_circ.Global_lock)
-		{
-			Buffer_circ.Global_lock.notifyAll();
-		}
 	}
 
 	protected static Integer nbProd;
