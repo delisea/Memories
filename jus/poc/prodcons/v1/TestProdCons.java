@@ -27,10 +27,12 @@ public class TestProdCons extends Simulateur {
 		System.out.println("INIT");
 		int fin = 0;
 		Buffer_circ b = new Buffer_circ(nbBuffer);
+		FProd.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
+		FCons.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
 		for(fin =0; fin<nbProd; fin++)
-			new FProd(b, obs, 3, 2).start();
+			new FProd(b, obs, getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction()).start();
 		for(fin =0; fin<nbCons; fin++)
-			new FCons(b, obs, 3, 2).start();
+			new FCons(b, obs).start();
 
 		// gérer mieux le cas ou ça start avant l'init de run
 		Thread.sleep(1000);
