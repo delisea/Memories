@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v2;
+package jus.poc.prodcons.v1;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -80,7 +80,11 @@ public class FProd extends Acteur implements _Producteur {
 	public void run() {
 		add_processing();
 
-		TestProdCons.getThr().join();
+		try {
+			TestProdCons.getThr().join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		System.out.println(identification() + "P: je démarre et j'ai " + _nbM + " paquets.");
 		while(_nbM>0)
 		{
