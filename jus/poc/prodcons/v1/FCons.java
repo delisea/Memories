@@ -12,16 +12,20 @@ public class FCons extends Acteur implements _Consommateur {
 
 	int _nbM;
 	Buffer_circ _buffer;
+	private static int _TM;
+	private static int _TdM;
 
 	public FCons(Buffer_circ buffer, Observateur observateur) throws ControlException
 	{
-		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		super(Acteur.typeConsommateur, observateur, _TM, _TdM);
 		_nbM = 0;
 		_buffer = buffer;
 	}
 
-	public static init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement){
+	public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement){
 		RANDCONS = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		_TM = moyenneTempsDeTraitement;
+		_TdM = deviationTempsDeTraitement;
 	}
 
 	protected Message consume()
