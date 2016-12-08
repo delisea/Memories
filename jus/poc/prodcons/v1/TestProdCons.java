@@ -22,7 +22,7 @@ public class TestProdCons extends Simulateur {
 	}
 
 	protected void run() throws Exception{
-		//init("options.xml");
+		init("options.xml");
 		Observateur obs = new Observateur();
 		System.out.println("INIT");
 		int fin = 0;
