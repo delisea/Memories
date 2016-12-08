@@ -10,6 +10,8 @@ public class Buffer_circ implements Tampon {
 
 	static public int _nc;
 	static public int _np;
+	static public Object _lockP;
+	static public Object _lockC;
 
 	Message[] _buff;
 	int _size;
@@ -42,51 +44,57 @@ public class Buffer_circ implements Tampon {
 	}
 
 	@Override
-	public synchronized Message get(_Consommateur arg0) {
-		Message ret;
-		System.out.println(arg0.identification() + "C: I want read.");
-		while(_att == 0 || _nc > 0)
-		{
-			_nc++;
-			if(_closed)
-				return null;
+	public Message get(_Consommateur arg0) {
+		
+		synchronized(_lockC){
+			Message ret;
+			System.out.println(arg0.identification() + "C: I want read.");
+			if(_att == 0 || _nc > 0)
+			{
+				_nc++;
+				if(_closed)
+					return null;
 
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				notify();
+				_nc--;
 			}
-			_nc--;
+			_att--;
+			ret = _buff[_S];
+			_S = (_S+1)%_size;
+			System.out.println(arg0.identification() + "C: I read ->" + ret);
+			return ret;
 		}
-		_att--;
-		ret = _buff[_S];
-		_S = (_S+1)%_size;
-		notify();
-		System.out.println(arg0.identification() + "C: I read ->" + ret);
-		return ret;
 	}
 
 	@Override
-	public synchronized void put(_Producteur arg0, Message arg1) {
-		System.out.println(arg0.identification() + "P: I want produce.");
+	public void put(_Producteur arg0, Message arg1) {
 
-		while(_size - _att == 0 || _np > 0)
-		{
-			_np++;
-			System.out.println("taken");
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		synchronized(_lockP){
+			System.out.println(arg0.identification() + "P: I want produce.");
+
+			if(_size - _att == 0 || _np > 0)
+			{
+				_np++;
+				System.out.println("taken");
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				notify();
+				_np--;
 			}
-			_np--;
-		}
 
-		_att++;
-		_buff[_N] = arg1;
-		_N = (_N+1)%_size;
-		notify();
-		System.out.println(arg0.identification() + "P: I have produced.");
+			_att++;
+			_buff[_N] = arg1;
+			_N = (_N+1)%_size;
+			System.out.println(arg0.identification() + "P: I have produced.");
+		}
 	}
 
 	@Override
