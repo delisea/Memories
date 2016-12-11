@@ -46,13 +46,14 @@ public class Buffer_circ implements Tampon {
 	@Override
 	public Message get(_Consommateur arg0) {
 		GMessage ret;
+		Boolean b = false;
 
 		synchronized(_lockC){
 			System.out.println(arg0.identification() + "C: I want read.");
 			if(_att == 0 || _nc > 0)
 			{
 				_nc++;
-				if(_closed)
+				if(_closed && _att == 0)
 					return null;
 
 				try {
@@ -60,20 +61,22 @@ public class Buffer_circ implements Tampon {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(_att > 1) Buffer_circ._lockC.notify();
+				if(_att > 1 || _att == 1 && _buff[_S].nbExemplairesRestants()>1) Buffer_circ._lockC.notify();
+				else if(_closed) Buffer_circ._lockC.notifyAll();
 
-		        if(_closed)
+		        if(_closed && _att == 0)
 		          return null;
 				_nc--;
 			}
-			ret = _buff[_S];
-			if(ret.nbExemplairesRestants()==0){
+			ret = _buff[_S].consume();
+			if(_buff[_S].nbExemplairesRestants()==0){
 				_S = (_S+1)%_size;
 				_att--;
+				b = true;
 			}
 			System.out.println(arg0.identification() + "C: I read ->" + ret);
 		}
-		synchronized(_lockP){ Buffer_circ._lockP.notify(); }
+		synchronized(_lockP){ if(b)Buffer_circ._lockP.notify(); }
 		return ret;
 	}
 
@@ -128,8 +131,8 @@ public class Buffer_circ implements Tampon {
 			System.out.println(arg0.identification() + "P: I have produced.");
 		}
 		synchronized(_lockC){ Buffer_circ._lockC.notify(); }
-	}	
-	
+	}
+
 	@Override
 	public int taille() {
 		return _size;

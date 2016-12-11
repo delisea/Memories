@@ -32,7 +32,7 @@ public class FProd extends Acteur implements _Producteur {
 	private static int _TdM;
 	static int _NbEx;
 	static int _dNbEx;
-	
+
 	public FProd(Buffer_circ buffer, Observateur observateur) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
@@ -56,13 +56,13 @@ public class FProd extends Acteur implements _Producteur {
 	{
 		int nbE = RANDPRODE.next();
 		GMessage message = new GMessage(nombreDeMessages() + ";Hi! I'm " + identification(), nbE);
-		int delai = RANDPRODT.next()*1000;
+		int delai = RANDPRODT.next()*1;
 		observateur.productionMessage(this, message, delai);
 		observateur.depotMessage(this,  message);
 		_buffer.putX(this, message);
 		_nbM--;
 		try {
-			sleep(delai);
+			sleep(delai*1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -114,7 +114,8 @@ public class FProd extends Acteur implements _Producteur {
 	      _buffer.close();
 	      synchronized(Buffer_circ._lockC)
 	      {
-	        Buffer_circ._lockC.notifyAll();
+	    	if(_buffer.enAttente() == 0)
+	    		Buffer_circ._lockC.notifyAll();
 	      }
 	    }
 	    System.out.println(identification() + "P: je part.");
