@@ -9,9 +9,6 @@ import jus.poc.prodcons.*;
  * 	on peut voir qu'il change de temps en temps
  *
  *
- *
- * Attention deviation marche pas car aleatiore de merde
- *
 */
 
 public class TestProdCons extends Simulateur {
@@ -34,10 +31,10 @@ public class TestProdCons extends Simulateur {
 		System.out.println("INIT");
 		int fin = 0;
 		Buffer_circ b = new Buffer_circ(nbBuffer);
-		FProd.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
+		FProd.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
 		FCons.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
 		for(fin =0; fin<nbProd; fin++)
-			new FProd(b, obs, getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction()).start();
+			new FProd(b, obs).start();
 		for(fin =0; fin<nbCons; fin++)
 			new FCons(b, obs).start();
 
