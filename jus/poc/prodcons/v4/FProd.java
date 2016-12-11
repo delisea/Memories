@@ -22,10 +22,10 @@ public class FProd extends Acteur implements _Producteur {
 
 	private static Aleatoire RANDPRODT = new Aleatoire(2, 1);
 	private static Aleatoire RANDPRODM = new Aleatoire(2, 1);
+	private static Aleatoire RANDPRODE = new Aleatoire(2, 1);
 
 	Buffer_circ _buffer;
 	int _nbM;
-	int _dM;
 
 	Observateur _obs;
 	private static int _TM;
@@ -45,6 +45,7 @@ public class FProd extends Acteur implements _Producteur {
 	  public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nombreMoyenDeProduction, int deviationNombreDeProduction, int nombreMoyenExemplaires, int deviationNombreExemplaires){
 	    RANDPRODT = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 	    RANDPRODM = new Aleatoire(nombreMoyenDeProduction, deviationNombreDeProduction);
+	    RANDPRODE = new Aleatoire(nombreMoyenExemplaires, deviationNombreExemplaires);
 		_TM = moyenneTempsDeTraitement;
 		_TdM = deviationTempsDeTraitement;
 		_NbEx = nombreMoyenExemplaires;
@@ -53,11 +54,12 @@ public class FProd extends Acteur implements _Producteur {
 
 	protected void produce() throws ControlException
 	{
-		GMessage message = new GMessage(nombreDeMessages() + ";Hi! I'm " + identification());
+		int nbE = RANDPRODE.next();
+		GMessage message = new GMessage(nombreDeMessages() + ";Hi! I'm " + identification(), nbE);
 		int delai = RANDPRODT.next()*1000;
 		observateur.productionMessage(this, message, delai);
 		observateur.depotMessage(this,  message);
-		_buffer.put(this, message);
+		_buffer.putX(this, message);
 		_nbM--;
 		try {
 			sleep(delai);

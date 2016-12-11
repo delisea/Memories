@@ -13,7 +13,7 @@ public class Buffer_circ implements Tampon {
 	static public final Object _lockP = new Object();
 	static public final Object _lockC = new Object();
 
-	Message[] _buff;
+	GMessage[] _buff;
 	int _size;
 	int _S;
 	int _N;
@@ -24,7 +24,7 @@ public class Buffer_circ implements Tampon {
 	public Buffer_circ(int size)
 	{
 		_size = size;
-		_buff = new Message[size];
+		_buff = new GMessage[size];
 		_S = 0;
 		_N = 0;
 		_att = 0;
@@ -45,7 +45,7 @@ public class Buffer_circ implements Tampon {
 
 	@Override
 	public Message get(_Consommateur arg0) {
-		Message ret;
+		GMessage ret;
 
 		synchronized(_lockC){
 			System.out.println(arg0.identification() + "C: I want read.");
@@ -66,9 +66,11 @@ public class Buffer_circ implements Tampon {
 		          return null;
 				_nc--;
 			}
-			_att--;
 			ret = _buff[_S];
-			_S = (_S+1)%_size;
+			if(ret.nbExemplairesRestants()==0){
+				_S = (_S+1)%_size;
+				_att--;
+			}
 			System.out.println(arg0.identification() + "C: I read ->" + ret);
 		}
 		synchronized(_lockP){ Buffer_circ._lockP.notify(); }
@@ -95,13 +97,39 @@ public class Buffer_circ implements Tampon {
 			}
 
 			_att++;
-			_buff[_N] = arg1;
+			_buff[_N] = new GMessage(arg1.toString(), 1);
 			_N = (_N+1)%_size;
 			System.out.println(arg0.identification() + "P: I have produced.");
 		}
 		synchronized(_lockC){ Buffer_circ._lockC.notify(); }
 	}
 
+	public void putX(_Producteur arg0, GMessage arg1) {
+
+		synchronized(Buffer_circ._lockP){
+			System.out.println(arg0.identification() + "P: I want produce." + arg1._exRestants);
+
+			if(_size - _att == 0 || _np > 0)
+			{
+				_np++;
+				System.out.println("taken");
+				try {
+					Buffer_circ._lockP.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if(_size - _att > 1) Buffer_circ._lockP.notify();
+				_np--;
+			}
+
+			_att++;
+			_buff[_N] = arg1;
+			_N = (_N+1)%_size;
+			System.out.println(arg0.identification() + "P: I have produced.");
+		}
+		synchronized(_lockC){ Buffer_circ._lockC.notify(); }
+	}	
+	
 	@Override
 	public int taille() {
 		return _size;
