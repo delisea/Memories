@@ -28,7 +28,7 @@ public class FProd extends Acteur implements _Producteur {
 
 	Buffer_circ _buffer;
 	int _nbM;
-	int _dM; Attention deviation marche pas car aleatiore de merde
+	int _dM; //Attention deviation marche pas car aleatiore de merde
 	private static int _TM;
 	private static int _TdM;
 
