@@ -30,6 +30,7 @@ public class FCons extends Acteur implements _Consommateur {
 	{
 		int delai = RANDCONS.next()*1000;
 		Message ret = _buffer.get(this);
+		if(ret == null) return null;
 		observateur.consommationMessage(this, ret, delai);
 		observateur.retraitMessage(this, ret);
 		_nbM++;
