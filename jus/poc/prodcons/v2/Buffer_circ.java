@@ -56,11 +56,13 @@ public class Buffer_circ implements Tampon {
 					return null;
 
 				try {
-					Buffer_circ._lockC.wait();
+					_lockC.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(_att > 1) Buffer_circ._lockC.notify();
+				if(_att > 1) _lockC.notify();
+				if(_closed)
+					return null;
 				_nc--;
 			}
 			_att--;
@@ -75,7 +77,7 @@ public class Buffer_circ implements Tampon {
 	@Override
 	public void put(_Producteur arg0, Message arg1) {
 
-		synchronized(Buffer_circ._lockP){
+		synchronized(_lockP){
 			System.out.println(arg0.identification() + "P: I want produce.");
 
 			if(_size - _att == 0 || _np > 0)
@@ -83,11 +85,11 @@ public class Buffer_circ implements Tampon {
 				_np++;
 				System.out.println("taken");
 				try {
-					Buffer_circ._lockP.wait();
+					_lockP.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(_size - _att > 1) Buffer_circ._lockP.notify();
+				if(_size - _att > 1) _lockP.notify();
 				_np--;
 			}
 
@@ -96,7 +98,7 @@ public class Buffer_circ implements Tampon {
 			_N = (_N+1)%_size;
 			System.out.println(arg0.identification() + "P: I have produced.");
 		}
-		synchronized(_lockC){ Buffer_circ._lockC.notify(); }
+		synchronized(_lockC){ _lockC.notify(); }
 	}
 
 	@Override
