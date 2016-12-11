@@ -61,6 +61,9 @@ public class Buffer_circ implements Tampon {
 					e.printStackTrace();
 				}
 				if(_att > 1) Buffer_circ._lockC.notify();
+
+		        if(_closed)
+		          return null;
 				_nc--;
 			}
 			_att--;

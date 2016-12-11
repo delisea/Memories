@@ -9,12 +9,12 @@ public class FProd extends Acteur implements _Producteur {
 
 	private static int _processing = 0;
 
-	private static void add_processing()
+	private synchronized static void add_processing()
 	{
 		_processing++;
 	}
 
-	private static void remove_processing()
+	private synchronized static void remove_processing()
 	{
 		_processing--;
 	}
@@ -24,7 +24,8 @@ public class FProd extends Acteur implements _Producteur {
 		return _processing;
 	}
 
-	private static Aleatoire RANDPROD = new Aleatoire(2, 1);
+	private static Aleatoire RANDPRODT = new Aleatoire(2, 1);
+	private static Aleatoire RANDPRODM = new Aleatoire(2, 1);
 
 	Buffer_circ _buffer;
 	int _nbM;
@@ -32,15 +33,16 @@ public class FProd extends Acteur implements _Producteur {
 	private static int _TM;
 	private static int _TdM;
 
-	public FProd(Buffer_circ buffer, Observateur observateur, int nombreMoyenDeProduction, int deviationNombreDeProduction) throws ControlException
+	public FProd(Buffer_circ buffer, Observateur observateur) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
-		_nbM = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreDeProduction);
+		_nbM = RANDPRODM.next();
 		_buffer = buffer;
 	}
 
-	public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement){
-		RANDPROD = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+	public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nombreMoyenDeProduction, int deviationNombreDeProduction){
+		RANDPRODT = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		RANDPRODM = new Aleatoire(nombreMoyenDeProduction, deviationNombreDeProduction);
 		_TM = moyenneTempsDeTraitement;
 		_TdM = deviationTempsDeTraitement;
 	}
@@ -50,7 +52,7 @@ public class FProd extends Acteur implements _Producteur {
 		_buffer.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
 		_nbM--;
 		try {
-			sleep(RANDPROD.next()*1000);
+			sleep(RANDPRODT.next()*1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -92,14 +94,17 @@ public class FProd extends Acteur implements _Producteur {
 		}
 
 		remove_processing();
+
 		if(get_processing() == 0)
+		{
 			_buffer.close();
+			synchronized(Buffer_circ._lockC)
+			{
+				Buffer_circ._lockC.notifyAll();
+			}
+		}
 		System.out.println(identification() + "P: je part.");
 
-		synchronized(_buffer)
-		{
-			_buffer.notifyAll();
-		}
 	}
 
 }

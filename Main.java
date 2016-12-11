@@ -1,6 +1,6 @@
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.prodcons.v2.TestProdCons;
+import jus.poc.prodcons.v3.TestProdCons;
 
 public class Main extends Simulateur {
 
