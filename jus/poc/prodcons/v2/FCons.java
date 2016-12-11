@@ -31,6 +31,7 @@ public class FCons extends Acteur implements _Consommateur {
 	protected Message consume()
 	{
 		Message ret = _buffer.get(this);
+		if(ret == null) return null;
 		_nbM++;
 		try {
 			sleep(RANDCONS.next()*1000);
