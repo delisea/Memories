@@ -62,7 +62,7 @@ public class FProd extends Acteur implements _Producteur {
 		_buffer.putX(this, message);
 		_nbM--;
 		try {
-			sleep(delai*1000);
+			sleep(delai*1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

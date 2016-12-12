@@ -28,7 +28,7 @@ public class FCons extends Acteur implements _Consommateur {
 
 	protected Message consume() throws ControlException
 	{
-		int delai = RANDCONS.next()*1000;
+		int delai = RANDCONS.next()*1;
 		Message ret = _buffer.get(this);
 		if(ret == null) return null;
 		observateur.consommationMessage(this, ret, delai);

@@ -46,6 +46,7 @@ public class Buffer_circ implements Tampon {
 	@Override
 	public Message get(_Consommateur arg0) {
 		GMessage ret;
+		GMessage xmas;
 		Boolean b = false;
 
 		synchronized(_lockC){
@@ -69,11 +70,21 @@ public class Buffer_circ implements Tampon {
 				_nc--;
 			}
 			ret = _buff[_S].consume();
-			if(_buff[_S].nbExemplairesRestants()==0){
+			xmas = _buff[_S];
+			if(xmas.nbExemplairesRestants()==0){
 				_S = (_S+1)%_size;
 				_att--;
 				b = true;
 			}
+		}
+		synchronized(xmas){
+			if(xmas.nbExemplairesRestants()==0) xmas.notifyAll();
+			else
+				try {
+					xmas.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			System.out.println(arg0.identification() + "C: I read ->" + ret);
 		}
 		synchronized(_lockP){ if(b)Buffer_circ._lockP.notify(); }
