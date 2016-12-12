@@ -4,7 +4,7 @@
 	<comment>
 	</comment>
 	<entry key="nbProd">2</entry>
-	<entry key="nbCons">6</entry>
+	<entry key="nbCons">7</entry>
 	<entry key="nbBuffer">10</entry>
 	<entry key="tempsMoyenProduction">10</entry>
 	<entry key="deviationTempsMoyenProduction">1</entry>
