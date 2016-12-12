@@ -27,6 +27,8 @@ public class TestProdCons extends Simulateur {
 		Thr = Thread.currentThread();
 		init("options.xml");
 		Observateur obs = new Observateur();
+		if(getNombreMoyenNbExemplaire()+getDeviationNombreMoyenNbExemplaire() > nbCons)
+			nbCons = getNombreMoyenNbExemplaire()+getDeviationNombreMoyenNbExemplaire();
 		obs.init(nbProd, nbCons, nbBuffer);
 		System.out.println("INIT");
 		int fin = 0;

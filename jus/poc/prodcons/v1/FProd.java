@@ -47,13 +47,13 @@ public class FProd extends Acteur implements _Producteur {
 
 	protected void produce()
 	{
-		_buffer.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
-		_nbM--;
 		try {
 			sleep(RANDPROD.next()*1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		_buffer.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
+		_nbM--;
 	}
 
 	@Override

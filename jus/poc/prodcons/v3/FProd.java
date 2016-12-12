@@ -50,15 +50,15 @@ public class FProd extends Acteur implements _Producteur {
 	{
 		GMessage message = new GMessage(nombreDeMessages() + ";Hi! I'm " + identification());
 		int delai = RANDPRODT.next()*1000;
-		observateur.productionMessage(this, message, delai);
-		observateur.depotMessage(this,  message);
-		_buffer.put(this, message);
-		_nbM--;
 		try {
 			sleep(delai);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		observateur.productionMessage(this, message, delai);
+		observateur.depotMessage(this,  message);
+		_buffer.put(this, message);
+		_nbM--;
 	}
 
 	@Override
