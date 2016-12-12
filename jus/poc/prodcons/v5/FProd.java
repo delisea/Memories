@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v4;
+package jus.poc.prodcons.v5;
 import jus.poc.prodcons.*;
 
 public class FProd extends Acteur implements _Producteur {
@@ -22,16 +22,13 @@ public class FProd extends Acteur implements _Producteur {
 
 	private static Aleatoire RANDPRODT = new Aleatoire(2, 1);
 	private static Aleatoire RANDPRODM = new Aleatoire(2, 1);
-	private static Aleatoire RANDPRODE = new Aleatoire(2, 1);
 
 	Buffer_circ _buffer;
 	int _nbM;
-
+	int _dM;
 	Observateur _obs;
 	private static int _TM;
 	private static int _TdM;
-	static int _NbEx;
-	static int _dNbEx;
 
 	public FProd(Buffer_circ buffer, Observateur observateur) throws ControlException
 	{
@@ -42,38 +39,26 @@ public class FProd extends Acteur implements _Producteur {
 		_obs = observateur;
 	}
 
-	  public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nombreMoyenDeProduction, int deviationNombreDeProduction, int nombreMoyenExemplaires, int deviationNombreExemplaires){
+	  public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nombreMoyenDeProduction, int deviationNombreDeProduction){
 	    RANDPRODT = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 	    RANDPRODM = new Aleatoire(nombreMoyenDeProduction, deviationNombreDeProduction);
-	    RANDPRODE = new Aleatoire(nombreMoyenExemplaires, deviationNombreExemplaires);
 		_TM = moyenneTempsDeTraitement;
 		_TdM = deviationTempsDeTraitement;
-		_NbEx = nombreMoyenExemplaires;
-		_dNbEx = deviationNombreExemplaires;
 	}
 
 	protected void produce() throws ControlException
 	{
-		int nbE = RANDPRODE.next();
-		GMessage message = new GMessage(nombreDeMessages() + ";Hi! I'm " + identification(), nbE);
-<<<<<<< HEAD
+		GMessage message = new GMessage(nombreDeMessages() + ";Hi! I'm " + identification());
 		int delai = RANDPRODT.next()*1000;
-=======
-		int delai = RANDPRODT.next()*1;
 		observateur.productionMessage(this, message, delai);
 		observateur.depotMessage(this,  message);
-		_buffer.putX(this, message);
+		_buffer.put(this, message);
 		_nbM--;
->>>>>>> 9b0da6f2c3c66697a910dd21afdf6ce89e9d249d
 		try {
-			sleep(delai*1000);
+			sleep(delai);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		observateur.productionMessage(this, message, delai);
-		observateur.depotMessage(this,  message);
-		_buffer.putX(this, message);
-		_nbM--;
 	}
 
 	@Override
@@ -122,8 +107,7 @@ public class FProd extends Acteur implements _Producteur {
 	      _buffer.close();
 	      synchronized(Buffer_circ._lockC)
 	      {
-	    	if(_buffer.enAttente() == 0)
-	    		Buffer_circ._lockC.notifyAll();
+	        Buffer_circ._lockC.notifyAll();
 	      }
 	    }
 	    System.out.println(identification() + "P: je part.");
