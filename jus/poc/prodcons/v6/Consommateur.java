@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v3;
+package jus.poc.prodcons.v6;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -14,15 +14,15 @@ public class Consommateur extends Acteur implements _Consommateur {
 	ProdCons _buffer;
 	private static int _TM;
 	private static int _TdM;
-	Observateur _obs;
+	Mecanisme _obs;
 
-	public Consommateur(ProdCons buffer, Observateur observateur) throws ControlException
+	public Consommateur(ProdCons buffer, Observateur observateur, Mecanisme mec) throws ControlException
 	{
 		super(Acteur.typeConsommateur, observateur, _TM, _TdM);
-		_obs = observateur;
+		_obs = mec;
 		_nbM = 0;
 		_buffer = buffer;
-		observateur.newConsommateur(this);
+		mec.newConsommateur(this);
 	}
 
 	public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement){

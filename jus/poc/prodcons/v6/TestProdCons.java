@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v3;
+package jus.poc.prodcons.v6;
 import java.util.Properties;
 
 import jus.poc.prodcons.*;
@@ -6,10 +6,12 @@ import jus.poc.prodcons.*;
 public class TestProdCons extends Simulateur {
 
 	Observateur obs;
+	Mecanisme mec;
 
-	public TestProdCons(Observateur observateur) {
+	public TestProdCons(Observateur observateur, Mecanisme mecanisme) {
 		super(observateur);
 		obs = observateur;
+		mec = mecanisme;
 	}
 
 	private static Thread Thr;
@@ -22,14 +24,16 @@ public class TestProdCons extends Simulateur {
 		init("options.xml");
 		if(getSortie()!=0) System.out.println("Initialisation...");
 		obs.init(nbProd, nbCons, nbBuffer);
+		mec.init(nbProd, nbCons, nbBuffer);
+		System.out.println("INIT");
 		int fin = 0;
-		ProdCons b = new ProdCons(nbBuffer, obs);
+		ProdCons b = new ProdCons(nbBuffer, mec);
 		Producteur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
 		Consommateur.init(getTempsMoyenConsommation(), getDeviationTempsMoyenConsommation());
 		for(fin =0; fin<nbProd; fin++)
-			new Producteur(b, obs).start();
+			new Producteur(b, obs, mec).start();
 		for(fin =0; fin<nbCons; fin++)
-			new Consommateur(b, obs).start();
+			new Consommateur(b, obs, mec).start();
 		if(getSortie()!=0) System.out.println("Start...");
 	}
 

@@ -1,6 +1,7 @@
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.prodcons.v4.TestProdCons;
+import jus.poc.prodcons.v6.TestProdCons;
+import jus.poc.prodcons.v6.Mecanisme;
 
 public class Main extends Simulateur {
 
@@ -9,7 +10,7 @@ public class Main extends Simulateur {
 	}
 
 	public static void main(String[] args) {
-		new TestProdCons(new Observateur()).start();
+		new TestProdCons(new Observateur(), new Mecanisme()).start();
 	}
 
 	@Override

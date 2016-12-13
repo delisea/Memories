@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v3;
+package jus.poc.prodcons.v6;
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
@@ -31,17 +31,17 @@ public class Producteur extends Acteur implements _Producteur {
 	ProdCons _buffer;
 	int _nbM;
 	int _dM;
-	Observateur _obs;
+	Mecanisme _obs;
 	private static int _TM;
 	private static int _TdM;
 
-	public Producteur(ProdCons buffer, Observateur observateur) throws ControlException
+	public Producteur(ProdCons buffer, Observateur observateur, Mecanisme mec) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
 		_nbM = RANDPRODM.next();
 		_buffer = buffer;
-		_obs = observateur;
-		observateur.newProducteur(this);
+		_obs = mec;
+		mec.newProducteur(this);
 	}
 
 	public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nombreMoyenDeProduction, int deviationNombreDeProduction){

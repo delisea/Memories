@@ -12,8 +12,11 @@ public class TestProdCons extends Simulateur {
 		ss.add(s);
 	}
 
+	Observateur obs;
+
 	public TestProdCons(Observateur observateur) {
 		super(observateur);
+		obs = observateur;
 	}
 
 	private static Thread Thr;
@@ -24,7 +27,6 @@ public class TestProdCons extends Simulateur {
 	protected void run() throws Exception{
 		Thr = Thread.currentThread();
 		init("options.xml");
-		Observateur obs = new Observateur();
 		if(getNombreMoyenNbExemplaire()+getDeviationNombreMoyenNbExemplaire() > nbCons)
 			nbCons = getNombreMoyenNbExemplaire()+getDeviationNombreMoyenNbExemplaire();
 		obs.init(nbProd, nbCons, nbBuffer);
@@ -88,7 +90,7 @@ public class TestProdCons extends Simulateur {
 	public static int getSortie(){
 		return sortie;
 	}
-	
+
 	protected static void init(String file) {
 		final class Properties extends java.util.Properties{
 			private static final long serialVersionUID = 1L;

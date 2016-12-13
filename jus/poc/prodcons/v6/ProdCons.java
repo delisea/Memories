@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v3;
+package jus.poc.prodcons.v6;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
@@ -21,11 +21,11 @@ public class ProdCons implements Tampon {
 	int _S;
 	int _N;
 	int _att;
-	Observateur _obs;
+	Mecanisme _obs;
 
 	boolean _closed;
 
-	public ProdCons(int size, Observateur obs)
+	public ProdCons(int size, Mecanisme mec)
 	{
 		_size = size;
 		sEmptyRess = new Semaphore(_size);
@@ -34,7 +34,7 @@ public class ProdCons implements Tampon {
 		_N = 0;
 		_att = 0;
 		_closed = false;
-		_obs = obs;
+		_obs = mec;
 	}
 
 	public void close()
