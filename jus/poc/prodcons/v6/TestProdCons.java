@@ -1,22 +1,17 @@
-package jus.poc.prodcons.v4;
-import java.util.ArrayList;
+package jus.poc.prodcons.v6;
 import java.util.Properties;
 
 import jus.poc.prodcons.*;
 
 public class TestProdCons extends Simulateur {
 
-	public static ArrayList<String> ss = new ArrayList<String>();
-	public static synchronized void adds(String s)
-	{
-		ss.add(s);
-	}
-
 	Observateur obs;
+	Mecanisme mec;
 
-	public TestProdCons(Observateur observateur) {
+	public TestProdCons(Observateur observateur, Mecanisme mecanisme) {
 		super(observateur);
 		obs = observateur;
+		mec = mecanisme;
 	}
 
 	private static Thread Thr;
@@ -27,18 +22,18 @@ public class TestProdCons extends Simulateur {
 	protected void run() throws Exception{
 		Thr = Thread.currentThread();
 		init("options.xml");
-		if(getNombreMoyenNbExemplaire()+getDeviationNombreMoyenNbExemplaire() > nbCons)
-			nbCons = getNombreMoyenNbExemplaire()+getDeviationNombreMoyenNbExemplaire();
-		obs.init(nbProd, nbCons, nbBuffer);
 		if(getSortie()!=0) System.out.println("Initialisation...");
+		obs.init(nbProd, nbCons, nbBuffer);
+		mec.init(nbProd, nbCons, nbBuffer);
+		System.out.println("INIT");
 		int fin = 0;
-		ProdCons b = new ProdCons(nbBuffer);
-		Producteur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction(), getNombreMoyenNbExemplaire(), getDeviationNombreMoyenNbExemplaire());
-		Consommateur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
+		ProdCons b = new ProdCons(nbBuffer, mec);
+		Producteur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
+		Consommateur.init(getTempsMoyenConsommation(), getDeviationTempsMoyenConsommation());
 		for(fin =0; fin<nbProd; fin++)
-			new Producteur(b, obs).start();
+			new Producteur(b, obs, mec).start();
 		for(fin =0; fin<nbCons; fin++)
-			new Consommateur(b, obs).start();
+			new Consommateur(b, obs, mec).start();
 		if(getSortie()!=0) System.out.println("Start...");
 	}
 

@@ -5,8 +5,11 @@ import jus.poc.prodcons.*;
 
 public class TestProdCons extends Simulateur {
 
+	Observateur obs;
+
 	public TestProdCons(Observateur observateur) {
 		super(observateur);
+		obs = observateur;
 	}
 
 	private static Thread Thr;
@@ -17,7 +20,6 @@ public class TestProdCons extends Simulateur {
 	protected void run() throws Exception{
 		Thr = Thread.currentThread();
 		init("options.xml");
-		Observateur obs = new Observateur();
 		if(getSortie()!=0) System.out.println("Initialisation...");
 		int fin = 0;
 		ProdCons b = new ProdCons(nbBuffer);
