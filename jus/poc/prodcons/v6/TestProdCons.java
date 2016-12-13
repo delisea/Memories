@@ -35,6 +35,7 @@ public class TestProdCons extends Simulateur {
 		for(fin =0; fin<nbCons; fin++)
 			new Consommateur(b, obs, mec).start();
 		if(getSortie()!=0) System.out.println("Start...");
+		mec.start();
 	}
 
 	protected static int nbProd;

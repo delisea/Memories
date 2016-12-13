@@ -87,7 +87,11 @@ public class Consommateur extends Acteur implements _Consommateur {
 			ret = consume();
 		} while(ret != null);
 		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : Leaving");
-
+		try {
+			_obs.consommateurPart(this);
+		} catch (ControlException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

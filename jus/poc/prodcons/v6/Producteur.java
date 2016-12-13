@@ -111,6 +111,11 @@ public class Producteur extends Acteur implements _Producteur {
 			_buffer.close();
 		}
 		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je m'en vais.");
+		try {
+			_obs.producteurPart(this);
+		} catch (ControlException e) {
+			e.printStackTrace();
+		}
 
 	}
 
