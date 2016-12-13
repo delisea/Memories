@@ -4,7 +4,7 @@ import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 
-public class Buffer_circ implements Tampon {
+public class ProdCons implements Tampon {
 
 	static public final Object Global_lock = new Object();
 
@@ -16,7 +16,7 @@ public class Buffer_circ implements Tampon {
 
 	boolean _closed;
 
-	public Buffer_circ(int size)
+	public ProdCons(int size)
 	{
 		_size = size;
 		_buff = new Message[size];

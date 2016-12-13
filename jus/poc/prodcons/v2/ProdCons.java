@@ -4,7 +4,7 @@ import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 
-public class Buffer_circ implements Tampon {
+public class ProdCons implements Tampon {
 
 
 	private Semaphore sBuff = new Semaphore(1);
@@ -20,7 +20,7 @@ public class Buffer_circ implements Tampon {
 	static public final Object _lockP = new Object();
 	static public final Object _lockC = new Object();
 
-	GMessage[] _buff;
+	Message[] _buff;
 	int _size;
 	int _S;
 	int _N;
@@ -28,10 +28,10 @@ public class Buffer_circ implements Tampon {
 
 	boolean _closed;
 
-	public Buffer_circ(int size)
+	public ProdCons(int size)
 	{
 		_size = size;
-		_buff = new GMessage[size];
+		_buff = new Message[size];
 		_S = 0;
 		_N = 0;
 		_np = 0;
@@ -67,7 +67,7 @@ public class Buffer_circ implements Tampon {
 		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
 		sBuff.p();
 
-		_buff[_N] = (GMessage)message;
+		_buff[_N] = message;
 		_N = (_N+1)%_size;
 		_att++;
 
@@ -81,7 +81,7 @@ public class Buffer_circ implements Tampon {
 
 	public Message get(_Consommateur cons)
 	{System.out.println(cons.identification()+" want read");
-		GMessage ret;
+		Message ret;
 
 		// Semaphore Prod, garanti qu'un seul Consommateur consome à la fois + fifo
 		sCons.p();

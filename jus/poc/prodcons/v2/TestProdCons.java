@@ -29,13 +29,13 @@ public class TestProdCons extends Simulateur {
 		Observateur obs = new Observateur();
 		System.out.println("INIT");
 		int fin = 0;
-		Buffer_circ b = new Buffer_circ(nbBuffer);
-		FProd.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
-		FCons.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
+		ProdCons b = new ProdCons(nbBuffer);
+		Producteur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
+		Consommateur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
 		for(fin =0; fin<nbProd; fin++)
-			new FProd(b, obs).start();
+			new Producteur(b, obs).start();
 		for(fin =0; fin<nbCons; fin++)
-			new FCons(b, obs).start();
+			new Consommateur(b, obs).start();
 
 		System.out.println("START");
 	}
