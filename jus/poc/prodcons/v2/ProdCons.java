@@ -3,6 +3,7 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
+import jus.poc.prodcons.v1.TestProdCons;
 
 public class ProdCons implements Tampon {
 
@@ -57,12 +58,15 @@ public class ProdCons implements Tampon {
 	}
 
 	public void put(_Producteur cons, Message message)
-	{System.out.println(cons.identification()+" want write");
+	{
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+cons.identification()+" : Ready to produce");
 		// Semaphore Prod, garanti qu'un seul Producteur  produit à la fois + fifo
 		sProd.p();
 
 		// Demande un emplacement libre
-		sEmptyRess.p();System.out.println(cons.identification()+" is writing");
+		sEmptyRess.p();
+		
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+cons.identification()+" : Have produced");
 
 		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
 		sBuff.p();
@@ -80,7 +84,8 @@ public class ProdCons implements Tampon {
 	}
 
 	public Message get(_Consommateur cons)
-	{System.out.println(cons.identification()+" want read");
+	{
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+cons.identification()+" : Ready to read");
 		Message ret;
 
 		// Semaphore Prod, garanti qu'un seul Consommateur consome à la fois + fifo
@@ -93,7 +98,7 @@ public class ProdCons implements Tampon {
 		}
 
 		// Demande une ressource
-		sStillRess.p();System.out.println(cons.identification()+" is writing");
+		sStillRess.p();
 
 		if(_att == 0)
 			return null;
@@ -105,6 +110,8 @@ public class ProdCons implements Tampon {
 		_S = (_S+1)%_size;
 		_att--;
 
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+cons.identification()+" : Reading -> " + ret);
+		
 		// Alloue un emplacement vide
 		sEmptyRess.v();
 

@@ -69,14 +69,14 @@ public class Consommateur extends Acteur implements _Consommateur {
 			e.printStackTrace();
 		}
 
-		System.out.println(identification() + "C: je d√©marre");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : DÈmarre");
 
 		Message ret;
 		do
 		{
 			ret = consume();
 		} while(ret != null);
-		System.out.println(identification() + "C: I leave");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : Leaving");
 
 	}
 

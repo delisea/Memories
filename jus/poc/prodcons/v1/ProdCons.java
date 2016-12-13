@@ -39,7 +39,7 @@ public class ProdCons implements Tampon {
 	@Override
 	public synchronized Message get(_Consommateur arg0) {
 		Message ret;
-		System.out.println(arg0.identification() + "C: I want read.");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+arg0.identification()+" : Ready to read");
 		while(_att == 0)
 		{
 			if(_closed)
@@ -55,16 +55,16 @@ public class ProdCons implements Tampon {
 		ret = _buff[_S];
 		_S = (_S+1)%_size;
 		notifyAll();
-		System.out.println(arg0.identification() + "C: I read ->" + ret);
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+arg0.identification()+" : Reading -> " + ret);
 		return ret;
 	}
 
 	@Override
 	public synchronized void put(_Producteur arg0, Message arg1) {
-		System.out.println(arg0.identification() + "P: I want produce.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+" : Ready to produce");
 		while(_size - _att == 0)
 		{
-			System.out.println("taken");
+			if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+"En attente");
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -76,7 +76,7 @@ public class ProdCons implements Tampon {
 		_buff[_N] = arg1;
 		_N = (_N+1)%_size;
 		notifyAll();
-		System.out.println(arg0.identification() + "P: I have produced.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+" : Have produced");
 	}
 
 	@Override

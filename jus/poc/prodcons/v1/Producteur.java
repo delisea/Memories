@@ -52,7 +52,7 @@ public class Producteur extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		_buffer.put(this, new MessageX(nombreDeMessages() + ";Hi! I'm " + identification()));
+		_buffer.put(this, new MessageX("Je suis le producteur "+identification()+" et j'ai "+nombreDeMessages()+" messages à produire."));
 		_nbM--;
 	}
 
@@ -85,7 +85,7 @@ public class Producteur extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(identification() + "P: je dÃ©marre et j'ai " + _nbM + " paquets.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je démarre et j'ai " + _nbM + " messages à produire.");
 		while(_nbM>0)
 		{
 			produce();
@@ -94,7 +94,7 @@ public class Producteur extends Acteur implements _Producteur {
 		remove_processing();
 		if(get_processing() == 0)
 			_buffer.close();
-		System.out.println(identification() + "P: je part.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je m'en vais.");
 
 		synchronized(_buffer)
 		{

@@ -3,19 +3,10 @@ import java.util.Properties;
 
 import jus.poc.prodcons.*;
 
-/*
- * tester la commutation:
- * 	faire le test avec des temps nuls
- * 	on peut voir qu'il change de temps en temps
- *
- *
-*/
-
 public class TestProdCons extends Simulateur {
 
 	public TestProdCons(Observateur observateur) {
 		super(observateur);
-		// TODO Auto-generated constructor stub
 	}
 
 	private static Thread Thr;
@@ -27,7 +18,7 @@ public class TestProdCons extends Simulateur {
 		Thr = Thread.currentThread();
 		init("options.xml");
 		Observateur obs = new Observateur();
-		System.out.println("INIT");
+		if(getSortie()!=0) System.out.println("Initialisation...");
 		int fin = 0;
 		ProdCons b = new ProdCons(nbBuffer);
 		Producteur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
@@ -36,55 +27,58 @@ public class TestProdCons extends Simulateur {
 			new Producteur(b, obs).start();
 		for(fin =0; fin<nbCons; fin++)
 			new Consommateur(b, obs).start();
-
-		System.out.println("START");
+		if(getSortie()!=0) System.out.println("Start...");
 	}
 
-	protected static Integer nbProd;
+	protected static int nbProd;
 	public static int getNbProd(){
 		return nbProd;
 	}
-	protected static Integer nbCons;
+	protected static int nbCons;
 	public static int getNbCons(){
 		return nbCons;
 	}
-	protected static Integer nbBuffer;
+	protected static int nbBuffer;
 	public static int getNbBuffer(){
 		return nbBuffer;
 	}
-	protected static Integer tempsMoyenProduction;
+	protected static int tempsMoyenProduction;
 	public static int getTempsMoyenProduction(){
 		return tempsMoyenProduction;
 	}
-	protected static Integer deviationTempsMoyenProduction;
+	protected static int deviationTempsMoyenProduction;
 	public static int getDeviationTempsMoyenProduction(){
 		return deviationTempsMoyenProduction;
 	}
-	protected static Integer tempsMoyenConsommation;
+	protected static int tempsMoyenConsommation;
 	public static int getTempsMoyenConsommation(){
 		return tempsMoyenConsommation;
 	}
-	protected static Integer deviationTempsMoyenConsommation;
+	protected static int deviationTempsMoyenConsommation;
 	public static int getDeviationTempsMoyenConsommation(){
 		return deviationTempsMoyenConsommation;
 	}
-	protected static Integer nombreMoyenDeProduction;
+	protected static int nombreMoyenDeProduction;
 	public static int getNombreMoyenDeProduction(){
 		return nombreMoyenDeProduction;
 	}
-	protected static Integer deviationNombreMoyenDeProduction;
+	protected static int deviationNombreMoyenDeProduction;
 	public static int getDeviationNombreMoyenDeProduction(){
 		return deviationNombreMoyenDeProduction;
 	}
-	protected static Integer nombreMoyenNbExemplaire;
+	protected static int nombreMoyenNbExemplaire;
 	public static int getNombreMoyenNbExemplaire(){
 		return nombreMoyenNbExemplaire;
 	}
-	protected static Integer deviationNombreMoyenNbExemplaire;
+	protected static int deviationNombreMoyenNbExemplaire;
 	public static int getDeviationNombreMoyenNbExemplaire(){
 		return deviationNombreMoyenNbExemplaire;
 	}
-
+	protected static int sortie;
+	public static int getSortie(){
+		return sortie;
+	}
+	
 	/**
 	* Retreave the parameters of the application.
 	* @param file the final name of the file containing the options.
@@ -118,6 +112,8 @@ public class TestProdCons extends Simulateur {
 		deviationNombreMoyenDeProduction = opt.get("deviationNombreMoyenDeProduction");
 		nombreMoyenNbExemplaire = opt.get("nombreMoyenNbExemplaire");
 		deviationNombreMoyenNbExemplaire = opt.get("deviationNombreMoyenNbExemplaire");
+		sortie = opt.get("sortie");
 	}
 
 }
+

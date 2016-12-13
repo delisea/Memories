@@ -5,6 +5,7 @@ import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
+import jus.poc.prodcons.v1.TestProdCons;
 
 public class Consommateur extends Acteur implements _Consommateur {
 
@@ -70,14 +71,14 @@ public class Consommateur extends Acteur implements _Consommateur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(identification() + "C: je d√©marre");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : DÈmarre");
 
 		Message ret;
 		do
 		{
 			ret = consume();
 		} while(ret != null);
-		System.out.println(identification() + "C: I leave");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : Leaving");
 
 	}
 

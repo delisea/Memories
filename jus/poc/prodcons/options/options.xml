@@ -14,4 +14,5 @@
 	<entry key="deviationNombreMoyenDeProduction">1</entry>
 	<entry key="nombreMoyenNbExemplaire">5</entry>
 	<entry key="deviationNombreMoyenNbExemplaire">1</entry>
+	<entry key="sortie">0</entry>
 </properties>
