@@ -6,12 +6,11 @@ import jus.poc.prodcons.*;
 public class TestProdCons extends Simulateur {
 
 	Observateur obs;
-	Mecanisme mec;
+	Mecanisme mec = new Mecanisme();
 
-	public TestProdCons(Observateur observateur, Mecanisme mecanisme) {
+	public TestProdCons(Observateur observateur) {
 		super(observateur);
 		obs = observateur;
-		mec = mecanisme;
 	}
 
 	private static Thread Thr;
