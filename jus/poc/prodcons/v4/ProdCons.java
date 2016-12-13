@@ -70,16 +70,16 @@ public class ProdCons implements Tampon {
 
 		// Demande un emplacement libre
 		sEmptyRess.p();
-		
+
 		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
 		sBuff.p();
 
 		// Alloue une ressource
-		sStillRess.v();
-
 		_buff[_N] = message;
 		_N = (_N+1)%_size;
 		_att++;
+
+		sStillRess.v();
 
 		if(TestProdCons.getSortie()!=0) System.out.println("P"+prod.identification()+" : J'ai produit en "+message.nbExemplairesRestants()+" exemplaires");
 
@@ -131,7 +131,7 @@ public class ProdCons implements Tampon {
 		{
 			_att--;
 			_S = (_S+1)%_size;
-			
+
 
 			// Alloue un emplacement vide
 			sEmptyRess.v();
