@@ -81,7 +81,7 @@ public class ProdCons implements Tampon {
 		_N = (_N+1)%_size;
 		_att++;
 
-		if(TestProdCons.getSortie()!=0) System.out.println("P"+prod.identification()+" : Have produced");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+prod.identification()+" : J'ai produit en "+message.nbExemplairesRestants()+" exemplaires");
 
 		sBuff.v();
 
@@ -125,12 +125,13 @@ public class ProdCons implements Tampon {
 
 		temp = _buff[_S];
 		ret = temp.consume();
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+cons.identification()+" : Reading -> " + ret);
+
 		if(temp.nbExemplairesRestants() == 0)
 		{
 			_att--;
 			_S = (_S+1)%_size;
 			
-			if(TestProdCons.getSortie()!=0) System.out.println("C"+cons.identification()+" : Reading -> " + ret);
 
 			// Alloue un emplacement vide
 			sEmptyRess.v();
