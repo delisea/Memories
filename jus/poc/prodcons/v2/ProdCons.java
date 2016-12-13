@@ -11,7 +11,7 @@ public class ProdCons implements Tampon {
 	private Semaphore sProd = new Semaphore(1);
 	private Semaphore sCons = new Semaphore(1);
 	private Semaphore sStillRess = new Semaphore(0);
-	private Semaphore sEmptyRess = new Semaphore(/*_size*/5);
+	private Semaphore sEmptyRess;
 
 	static public final Object Global_lock = new Object();
 
@@ -31,6 +31,7 @@ public class ProdCons implements Tampon {
 	public ProdCons(int size)
 	{
 		_size = size;
+		sEmptyRess = new Semaphore(_size);
 		_buff = new Message[size];
 		_S = 0;
 		_N = 0;

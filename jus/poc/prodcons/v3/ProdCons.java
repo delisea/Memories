@@ -3,8 +3,9 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
+import jus.poc.prodcons.v2.TestProdCons;
 
-public class Buffer_circ implements Tampon {
+public class ProdCons implements Tampon {
 
 	static public final Object Global_lock = new Object();
 
@@ -21,7 +22,7 @@ public class Buffer_circ implements Tampon {
 
 	boolean _closed;
 
-	public Buffer_circ(int size)
+	public ProdCons(int size)
 	{
 		_size = size;
 		_buff = new Message[size];
@@ -48,7 +49,7 @@ public class Buffer_circ implements Tampon {
 		Message ret;
 
 		synchronized(_lockC){
-			System.out.println(arg0.identification() + "C: I want read.");
+			if(TestProdCons.getSortie()!=0) System.out.println("C"+arg0.identification()+" : Ready to read");
 			if(_att == 0 || _nc > 0)
 			{
 				_nc++;
@@ -56,11 +57,11 @@ public class Buffer_circ implements Tampon {
 					return null;
 
 				try {
-					Buffer_circ._lockC.wait();
+					ProdCons._lockC.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(_att > 1) Buffer_circ._lockC.notify();
+				if(_att > 1) ProdCons._lockC.notify();
 
 		        if(_closed)
 		          return null;
@@ -69,37 +70,37 @@ public class Buffer_circ implements Tampon {
 			_att--;
 			ret = _buff[_S];
 			_S = (_S+1)%_size;
-			System.out.println(arg0.identification() + "C: I read ->" + ret);
+			if(TestProdCons.getSortie()!=0) System.out.println("C"+arg0.identification()+" : Reading -> " + ret);
 		}
-		synchronized(_lockP){ Buffer_circ._lockP.notify(); }
+		synchronized(_lockP){ ProdCons._lockP.notify(); }
 		return ret;
 	}
 
 	@Override
 	public void put(_Producteur arg0, Message arg1) {
 
-		synchronized(Buffer_circ._lockP){
-			System.out.println(arg0.identification() + "P: I want produce.");
+		synchronized(ProdCons._lockP){
+			if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+" : Ready to produce");
 
 			if(_size - _att == 0 || _np > 0)
 			{
 				_np++;
 				System.out.println("taken");
 				try {
-					Buffer_circ._lockP.wait();
+					ProdCons._lockP.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(_size - _att > 1) Buffer_circ._lockP.notify();
+				if(_size - _att > 1) ProdCons._lockP.notify();
 				_np--;
 			}
 
 			_att++;
 			_buff[_N] = arg1;
 			_N = (_N+1)%_size;
-			System.out.println(arg0.identification() + "P: I have produced.");
+			if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+" : Have produced");
 		}
-		synchronized(_lockC){ Buffer_circ._lockC.notify(); }
+		synchronized(_lockC){ ProdCons._lockC.notify(); }
 	}
 
 	@Override
