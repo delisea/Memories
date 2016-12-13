@@ -50,7 +50,7 @@ public class FProd extends Acteur implements _Producteur {
 	protected void produce()
 	{
 		try {
-			sleep(RANDPRODT.next()*1000);
+			sleep(RANDPRODT.next()*1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -98,10 +98,6 @@ public class FProd extends Acteur implements _Producteur {
 		if(get_processing() == 0)
 		{
 			_buffer.close();
-			synchronized(Buffer_circ._lockC)
-			{
-				Buffer_circ._lockC.notifyAll();
-			}
 		}
 		System.out.println(identification() + "P: je part.");
 

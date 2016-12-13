@@ -34,7 +34,7 @@ public class FCons extends Acteur implements _Consommateur {
 		if(ret == null) return null;
 		_nbM++;
 		try {
-			sleep(RANDCONS.next()*1000);
+			sleep(RANDCONS.next()*1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

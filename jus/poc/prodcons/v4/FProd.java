@@ -116,6 +116,10 @@ public class FProd extends Acteur implements _Producteur {
 	      {
 	    	if(_buffer.enAttente() == 0)
 	    		Buffer_circ._lockC.notifyAll();
+	    	System.out.println("END");
+	    	int i;
+	    		for(i=0; i<TestProdCons.ss.size(); i++)
+	    			System.out.println(TestProdCons.ss.get(i));
 	      }
 	    }
 	    System.out.println(identification() + "P: je part.");

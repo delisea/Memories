@@ -1,4 +1,5 @@
 package jus.poc.prodcons.v4;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import jus.poc.prodcons.*;
@@ -12,6 +13,13 @@ import jus.poc.prodcons.*;
 */
 
 public class TestProdCons extends Simulateur {
+
+
+	public static ArrayList<String> ss = new ArrayList<String>();
+	public static synchronized void adds(String s)
+	{
+		ss.add(s);
+	}
 
 	public TestProdCons(Observateur observateur) {
 		super(observateur);

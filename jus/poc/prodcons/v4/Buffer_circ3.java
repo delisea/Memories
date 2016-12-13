@@ -4,7 +4,7 @@ import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 
-public class Buffer_circ implements Tampon {
+public class Buffer_circ3 implements Tampon {
 
 	static public final Object Global_lock = new Object();
 
@@ -21,7 +21,7 @@ public class Buffer_circ implements Tampon {
 
 	boolean _closed;
 
-	public Buffer_circ(int size)
+	public Buffer_circ3(int size)
 	{
 		_size = size;
 		_buff = new GMessage[size];
@@ -58,12 +58,12 @@ public class Buffer_circ implements Tampon {
 					return null;
 
 				try {
-					Buffer_circ._lockC.wait();
+					Buffer_circ3._lockC.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(_att > 1 || _att == 1 && _buff[_S].nbExemplairesRestants()>1) Buffer_circ._lockC.notify();
-				else if(_closed) Buffer_circ._lockC.notifyAll();
+				if(_att > 1 || _att == 1 && _buff[_S].nbExemplairesRestants()>1) Buffer_circ3._lockC.notify();
+				else if(_closed) Buffer_circ3._lockC.notifyAll();
 
 		        if(_closed && _att == 0)
 		          return null;
@@ -89,7 +89,7 @@ public class Buffer_circ implements Tampon {
 				}
 			TestProdCons.adds(arg0.identification() + "C: I read ->" + ret);
 		}
-		synchronized(_lockP){ if(b && enAttente()==_size-1)Buffer_circ._lockP.notify(); }
+		synchronized(_lockP){ if(b && enAttente()==_size-1)Buffer_circ3._lockP.notify(); }
 		return ret;
 	}
 
@@ -102,7 +102,7 @@ public class Buffer_circ implements Tampon {
 	public void putX(_Producteur arg0, GMessage arg1) {
 		GMessage xmas;
 
-		synchronized(Buffer_circ._lockP){
+		synchronized(Buffer_circ3._lockP){
 			TestProdCons.adds(arg0.identification() + "P: I want produce." + arg1._exRestants);
 
 			if(_size - _att == 0 || _np > 0)
@@ -110,11 +110,11 @@ public class Buffer_circ implements Tampon {
 				_np++;
 				System.out.println("taken");
 				try {
-					Buffer_circ._lockP.wait();
+					Buffer_circ3._lockP.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(_size - _att > 1) Buffer_circ._lockP.notify();
+				if(_size - _att > 1) Buffer_circ3._lockP.notify();
 				_np--;
 			}
 
@@ -124,7 +124,7 @@ public class Buffer_circ implements Tampon {
 			_N = (_N+1)%_size;
 			TestProdCons.adds(arg0.identification() + "P: I have produced.");
 		}
-		synchronized(_lockC){ if(enAttente() == 1) Buffer_circ._lockC.notify(); }
+		synchronized(_lockC){ if(enAttente() == 1) Buffer_circ3._lockC.notify(); }
 		synchronized(xmas){
 			if(xmas.nbExemplairesRestants()!=0)
 				try {TestProdCons.adds("ici"+arg0.identification());
@@ -143,6 +143,105 @@ public class Buffer_circ implements Tampon {
 	@Override
 	public int taille() {
 		return _size;
+	}
+
+	private Semaphore sBuff = new Semaphore(1);
+	private Semaphore sProd = new Semaphore(1);
+	private Semaphore sCons = new Semaphore(1);
+	private Semaphore sStillRess = new Semaphore(0);
+	private Semaphore sEmptyRess = new Semaphore(/*_size*/5);
+	private Object LectLock = new Object();
+	public void put2()
+	{
+		// Semaphore Prod, garanti qu'un seul Producteur  produit à la fois + fifo
+		sProd.p();
+
+		// Demande un emplacement libre
+		sEmptyRess.p();
+
+		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
+		sBuff.p();
+
+		// Alloue une ressource
+		sStillRess.v();
+
+		inner_put();
+
+		sBuff.v();
+
+		synchronized (LectLock) {
+			if(true /* non vide */)
+				try {
+					LectLock.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		}
+
+		sProd.v();
+	}
+	public void get2()
+	{
+		// Semaphore Prod, garanti qu'un seul Consommateur consome à la fois + fifo
+		sCons.p();
+
+		// Demande une ressource
+		sStillRess.p();
+
+		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
+		sBuff.p();
+
+		// Alloue un emplacement vide
+		sEmptyRess.v();
+
+		inner_get();
+
+		sBuff.v();
+
+		synchronized (LectLock) {
+			if(true /* non vide */)
+				try {
+					LectLock.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			else
+				LectLock.notifyAll();
+		}
+
+		sCons.v();
+	}
+
+	private synchronized void inner_put()
+	{
+
+	}
+	private synchronized void inner_get()
+	{
+
+	}
+
+	protected class Semaphore {
+		int _v;
+		public Semaphore(int v)	{
+			_v = v;
+		}
+
+		public synchronized  void p() {
+			_v--;
+			if(_v<0)
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		}
+
+		public synchronized  void v() {
+			_v++;
+			if(_v<=0)
+				this.notify();
+		}
 	}
 
 }

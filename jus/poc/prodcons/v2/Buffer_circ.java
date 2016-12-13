@@ -6,6 +6,13 @@ import jus.poc.prodcons._Producteur;
 
 public class Buffer_circ implements Tampon {
 
+
+	private Semaphore sBuff = new Semaphore(1);
+	private Semaphore sProd = new Semaphore(1);
+	private Semaphore sCons = new Semaphore(1);
+	private Semaphore sStillRess = new Semaphore(0);
+	private Semaphore sEmptyRess = new Semaphore(/*_size*/5);
+
 	static public final Object Global_lock = new Object();
 
 	static public int _nc;
@@ -13,7 +20,7 @@ public class Buffer_circ implements Tampon {
 	static public final Object _lockP = new Object();
 	static public final Object _lockC = new Object();
 
-	Message[] _buff;
+	GMessage[] _buff;
 	int _size;
 	int _S;
 	int _N;
@@ -24,86 +31,115 @@ public class Buffer_circ implements Tampon {
 	public Buffer_circ(int size)
 	{
 		_size = size;
-		_buff = new Message[size];
+		_buff = new GMessage[size];
 		_S = 0;
 		_N = 0;
-		_att = 0;
 		_np = 0;
 		_nc = 0;
+		_att = 0;
 		_closed = false;
 	}
 
 	public void close()
 	{
 		_closed = true;
+		sStillRess.v();
 	}
 
 	@Override
 	public int enAttente() {
-		return _att;
-	}
-
-	@Override
-	public Message get(_Consommateur arg0) {
-		Message ret;
-
-		synchronized(_lockC){
-			System.out.println(arg0.identification() + "C: I want read.");
-			if(_att == 0 || _nc > 0)
-			{
-				_nc++;
-				if(_closed)
-					return null;
-
-				try {
-					_lockC.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if(_att > 1) _lockC.notify();
-				if(_closed)
-					return null;
-				_nc--;
-			}
-			_att--;
-			ret = _buff[_S];
-			_S = (_S+1)%_size;
-			System.out.println(arg0.identification() + "C: I read ->" + ret);
-		}
-		synchronized(_lockP){ Buffer_circ._lockP.notify(); }
-		return ret;
-	}
-
-	@Override
-	public void put(_Producteur arg0, Message arg1) {
-
-		synchronized(_lockP){
-			System.out.println(arg0.identification() + "P: I want produce.");
-
-			if(_size - _att == 0 || _np > 0)
-			{
-				_np++;
-				System.out.println("taken");
-				try {
-					_lockP.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if(_size - _att > 1) _lockP.notify();
-				_np--;
-			}
-
-			_att++;
-			_buff[_N] = arg1;
-			_N = (_N+1)%_size;
-			System.out.println(arg0.identification() + "P: I have produced.");
-		}
-		synchronized(_lockC){ _lockC.notify(); }
+		return sStillRess.n();
 	}
 
 	@Override
 	public int taille() {
 		return _size;
+	}
+
+	public void put(_Producteur cons, Message message)
+	{System.out.println(cons.identification()+" want write");
+		// Semaphore Prod, garanti qu'un seul Producteur  produit à la fois + fifo
+		sProd.p();
+
+		// Demande un emplacement libre
+		sEmptyRess.p();System.out.println(cons.identification()+" is writing");
+
+		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
+		sBuff.p();
+
+		_buff[_N] = (GMessage)message;
+		_N = (_N+1)%_size;
+		_att++;
+
+		// Alloue une ressource
+		sStillRess.v();
+
+		sBuff.v();
+
+		sProd.v();
+	}
+
+	public Message get(_Consommateur cons)
+	{System.out.println(cons.identification()+" want read");
+		GMessage ret;
+
+		// Semaphore Prod, garanti qu'un seul Consommateur consome à la fois + fifo
+		sCons.p();
+
+		if(_closed && _att == 0)
+		{
+			sCons.v();
+			return null;
+		}
+
+		// Demande une ressource
+		sStillRess.p();System.out.println(cons.identification()+" is writing");
+
+		if(_att == 0)
+			return null;
+
+		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
+		sBuff.p();
+
+		ret = _buff[_S];
+		_S = (_S+1)%_size;
+		_att--;
+
+		// Alloue un emplacement vide
+		sEmptyRess.v();
+
+		sBuff.v();
+
+		sCons.v();
+
+		return ret;
+	}
+
+	protected class Semaphore {
+		int _v;
+		public Semaphore(int v)	{
+			_v = v;
+		}
+
+		public synchronized int n(){
+			return _v;
+		}
+
+		public synchronized  void p() {
+			_v--;
+			if(_v<0)
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		}
+
+		public synchronized  void v() {
+			_v++;
+			if(_v<=0)
+				this.notify();
+		}
 	}
 
 }
