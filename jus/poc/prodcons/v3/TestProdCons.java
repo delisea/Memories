@@ -22,7 +22,7 @@ public class TestProdCons extends Simulateur {
 		obs.init(nbProd, nbCons, nbBuffer);
 		System.out.println("INIT");
 		int fin = 0;
-		ProdCons b = new ProdCons(nbBuffer);
+		ProdCons b = new ProdCons(nbBuffer, obs);
 		Producteur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
 		Consommateur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
 		for(fin =0; fin<nbProd; fin++)

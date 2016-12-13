@@ -1,6 +1,10 @@
 package jus.poc.prodcons.v3;
-import jus.poc.prodcons.*;
-import jus.poc.prodcons.v2.TestProdCons;
+import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons.Aleatoire;
+import jus.poc.prodcons.ControlException;
+import jus.poc.prodcons.Message;
+import jus.poc.prodcons.Observateur;
+import jus.poc.prodcons._Producteur;
 
 public class Producteur extends Acteur implements _Producteur {
 
@@ -34,31 +38,34 @@ public class Producteur extends Acteur implements _Producteur {
 	public Producteur(ProdCons buffer, Observateur observateur) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
-		observateur.newProducteur(this);
-	    _nbM = RANDPRODM.next();
+		_nbM = RANDPRODM.next();
 		_buffer = buffer;
 		_obs = observateur;
+		observateur.newProducteur(this);
 	}
 
-	  public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nombreMoyenDeProduction, int deviationNombreDeProduction){
-	    RANDPRODT = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
-	    RANDPRODM = new Aleatoire(nombreMoyenDeProduction, deviationNombreDeProduction);
+	public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement, int nombreMoyenDeProduction, int deviationNombreDeProduction){
+		RANDPRODT = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		RANDPRODM = new Aleatoire(nombreMoyenDeProduction, deviationNombreDeProduction);
 		_TM = moyenneTempsDeTraitement;
 		_TdM = deviationTempsDeTraitement;
 	}
 
-	protected void produce() throws ControlException
+	protected void produce()
 	{
-		MessageX message = new MessageX("Je suis le producteur "+identification()+" et ceci est mon message n°"+nombreDeMessages());
-		int delai = RANDPRODT.next()*1000;
+		int tps = RANDPRODT.next()*1;
+		Message msg = new MessageX("Je suis le producteur "+identification()+" et ceci est mon message nï¿½"+nombreDeMessages());
 		try {
-			sleep(delai);
+			_obs.productionMessage(this, msg, tps);
+		} catch (ControlException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			sleep(tps);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		observateur.productionMessage(this, message, delai);
-		observateur.depotMessage(this,  message);
-		_buffer.put(this, message);
+		_buffer.put(this, msg);
 		_nbM--;
 	}
 
@@ -91,27 +98,20 @@ public class Producteur extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je démarre et j'ai " + _nbM + " messages à produire.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je dï¿½marre et j'ai " + _nbM + " messages ï¿½ produire.");
 		while(_nbM>0)
 		{
-			try {
-				produce();
-			} catch (ControlException e) {
-				e.printStackTrace();
-			}
+			produce();
 		}
 
 		remove_processing();
 
-	    if(get_processing() == 0)
-	    {
-	      _buffer.close();
-	      synchronized(ProdCons._lockC)
-	      {
-	        ProdCons._lockC.notifyAll();
-	      }
-	    }
+		if(get_processing() == 0)
+		{
+			_buffer.close();
+		}
 		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je m'en vais.");
+
 	}
 
 }

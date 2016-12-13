@@ -1,6 +1,10 @@
 package jus.poc.prodcons.v3;
-import jus.poc.prodcons.*;
-import jus.poc.prodcons.v2.TestProdCons;
+import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons.Aleatoire;
+import jus.poc.prodcons.ControlException;
+import jus.poc.prodcons.Message;
+import jus.poc.prodcons.Observateur;
+import jus.poc.prodcons._Consommateur;
 
 public class Consommateur extends Acteur implements _Consommateur {
 
@@ -8,17 +12,17 @@ public class Consommateur extends Acteur implements _Consommateur {
 
 	int _nbM;
 	ProdCons _buffer;
-	Observateur _obs;
 	private static int _TM;
 	private static int _TdM;
+	Observateur _obs;
 
 	public Consommateur(ProdCons buffer, Observateur observateur) throws ControlException
 	{
 		super(Acteur.typeConsommateur, observateur, _TM, _TdM);
-		observateur.newConsommateur(this);
+		_obs = observateur;
 		_nbM = 0;
 		_buffer = buffer;
-		_obs = observateur;
+		observateur.newConsommateur(this);
 	}
 
 	public static void init(int moyenneTempsDeTraitement, int deviationTempsDeTraitement){
@@ -27,16 +31,19 @@ public class Consommateur extends Acteur implements _Consommateur {
 		_TdM = deviationTempsDeTraitement;
 	}
 
-	protected Message consume() throws ControlException
+	protected Message consume()
 	{
-		int delai = RANDCONS.next()*1000;
 		Message ret = _buffer.get(this);
 		if(ret == null) return null;
-		observateur.consommationMessage(this, ret, delai);
-		observateur.retraitMessage(this, ret);
 		_nbM++;
+		int tps = RANDCONS.next();
 		try {
-			sleep(delai);
+			_obs.consommationMessage(this, ret, tps);
+		} catch (ControlException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			sleep(tps*1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -72,16 +79,12 @@ public class Consommateur extends Acteur implements _Consommateur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : Démarre");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : Dï¿½marre");
 
-		Message ret = null;
+		Message ret;
 		do
 		{
-			try {
-				ret = consume();
-			} catch (ControlException e) {
-				e.printStackTrace();
-			}
+			ret = consume();
 		} while(ret != null);
 		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : Leaving");
 
