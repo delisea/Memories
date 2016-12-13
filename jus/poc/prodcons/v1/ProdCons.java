@@ -64,7 +64,7 @@ public class ProdCons implements Tampon {
 		if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+" : Ready to produce");
 		while(_size - _att == 0)
 		{
-			if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+"En attente");
+			if(TestProdCons.getSortie()!=0) System.out.println("P"+arg0.identification()+" : En attente");
 			try {
 				wait();
 			} catch (InterruptedException e) {

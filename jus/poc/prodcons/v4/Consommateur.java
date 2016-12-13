@@ -3,7 +3,7 @@ import jus.poc.prodcons.*;
 
 public class Consommateur extends Acteur implements _Consommateur {
 
-	private static Aleatoire RANDCONS = new Aleatoire(5, 2);
+	private static Aleatoire RANDCONS;
 
 	int _nbM;
 	ProdCons _buffer;

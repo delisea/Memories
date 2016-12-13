@@ -20,11 +20,10 @@ public class TestProdCons extends Simulateur {
 		Observateur obs = new Observateur();
 		if(getSortie()!=0) System.out.println("Initialisation...");
 		obs.init(nbProd, nbCons, nbBuffer);
-		System.out.println("INIT");
 		int fin = 0;
 		ProdCons b = new ProdCons(nbBuffer);
 		Producteur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction(), getNombreMoyenDeProduction(), getDeviationNombreMoyenDeProduction());
-		Consommateur.init(getTempsMoyenProduction(), getDeviationTempsMoyenProduction());
+		Consommateur.init(getTempsMoyenConsommation(), getDeviationTempsMoyenConsommation());
 		for(fin =0; fin<nbProd; fin++)
 			new Producteur(b, obs).start();
 		for(fin =0; fin<nbCons; fin++)

@@ -33,7 +33,7 @@ public class Consommateur extends Acteur implements _Consommateur {
 		Message ret = _buffer.get(this);
 		_nbM++;
 		try {
-			sleep(RANDCONS.next()*1000);
+			sleep(RANDCONS.next()*1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

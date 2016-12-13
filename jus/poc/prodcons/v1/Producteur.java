@@ -49,7 +49,7 @@ public class Producteur extends Acteur implements _Producteur {
 	protected void produce()
 	{
 		try {
-			sleep(RANDPROD.next()*1000);
+			sleep(RANDPROD.next()*1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
