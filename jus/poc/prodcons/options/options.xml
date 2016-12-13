@@ -3,16 +3,16 @@
 <properties>
 	<comment>
 	</comment>
-	<entry key="nbProd">2</entry>
-	<entry key="nbCons">7</entry>
-	<entry key="nbBuffer">10</entry>
+	<entry key="nbProd">2000</entry>
+	<entry key="nbCons">700</entry>
+	<entry key="nbBuffer">100</entry>
 	<entry key="tempsMoyenProduction">10</entry>
 	<entry key="deviationTempsMoyenProduction">1</entry>
 	<entry key="tempsMoyenConsommation">100</entry>
 	<entry key="deviationTempsMoyenConsommation">99</entry>
-	<entry key="nombreMoyenDeProduction">5</entry>
-	<entry key="deviationNombreMoyenDeProduction">1</entry>
-	<entry key="nombreMoyenNbExemplaire">5</entry>
-	<entry key="deviationNombreMoyenNbExemplaire">1</entry>
+	<entry key="nombreMoyenDeProduction">50</entry>
+	<entry key="deviationNombreMoyenDeProduction">10</entry>
+	<entry key="nombreMoyenNbExemplaire">500</entry>
+	<entry key="deviationNombreMoyenNbExemplaire">100</entry>
 	<entry key="sortie">1</entry>
 </properties>
