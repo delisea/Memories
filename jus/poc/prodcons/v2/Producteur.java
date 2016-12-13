@@ -29,7 +29,7 @@ public class Producteur extends Acteur implements _Producteur {
 
 	ProdCons _buffer;
 	int _nbM;
-	int _dM; //Attention deviation marche pas car aleatiore de merde
+	int _dM;
 	private static int _TM;
 	private static int _TdM;
 
@@ -54,7 +54,7 @@ public class Producteur extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		_buffer.put(this, new MessageX("Je suis le producteur "+identification()+" et ceci est mon message n°"+nombreDeMessages()));
+		_buffer.put(this, new MessageX("Je suis le producteur "+identification()+" et ceci est mon message nï¿½"+nombreDeMessages()));
 		_nbM--;
 	}
 
@@ -87,7 +87,7 @@ public class Producteur extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je démarre et j'ai " + _nbM + " messages à produire.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je dï¿½marre et j'ai " + _nbM + " messages ï¿½ produire.");
 		while(_nbM>0)
 		{
 			produce();

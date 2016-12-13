@@ -29,7 +29,7 @@ public class Producteur extends Acteur implements _Producteur {
 
 	ProdCons _buffer;
 	int _nbM;
-	int _dM; //Attention deviation marche pas car aleatiore de merde
+	int _dM;
 	private static int _TM;
 	private static int _TdM;
 
