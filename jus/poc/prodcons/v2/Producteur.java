@@ -4,8 +4,6 @@ import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Producteur;
-import jus.poc.prodcons.v1.MessageX;
-import jus.poc.prodcons.v1.TestProdCons;
 
 public class Producteur extends Acteur implements _Producteur {
 
@@ -56,7 +54,7 @@ public class Producteur extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		_buffer.put(this, new MessageX("Je suis le producteur "+identification()+" et j'ai "+nombreDeMessages()+" messages à produire."));
+		_buffer.put(this, new MessageX("Je suis le producteur "+identification()+" et ceci est mon message n°"+nombreDeMessages()));
 		_nbM--;
 	}
 

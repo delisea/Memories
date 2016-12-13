@@ -5,7 +5,6 @@ import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
-import jus.poc.prodcons.v1.TestProdCons;
 
 public class Consommateur extends Acteur implements _Consommateur {
 
