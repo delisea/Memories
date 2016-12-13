@@ -3,8 +3,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.omg.CosNaming.NamingContextPackage.NotEmpty;
-
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
@@ -17,18 +15,7 @@ public class ProdCons implements Tampon {
    final Condition notFull  = lock.newCondition();
    final Condition notEmpty = lock.newCondition();
 
-	private Semaphore sBuff = new Semaphore(1);
-	private Semaphore sProd = new Semaphore(1);
-	private Semaphore sCons = new Semaphore(1);
-	private Semaphore sStillRess = new Semaphore(0);
-	private Semaphore sEmptyRess;
-
 	static public final Object Global_lock = new Object();
-
-	static public int _nc;
-	static public int _np;
-	static public final Object _lockP = new Object();
-	static public final Object _lockC = new Object();
 
 	Message[] _buff;
 	int _size;
@@ -41,12 +28,9 @@ public class ProdCons implements Tampon {
 	public ProdCons(int size)
 	{
 		_size = size;
-		sEmptyRess = new Semaphore(_size);
 		_buff = new Message[size];
 		_S = 0;
 		_N = 0;
-		_np = 0;
-		_nc = 0;
 		_att = 0;
 		_closed = false;
 	}
@@ -61,7 +45,7 @@ public class ProdCons implements Tampon {
 
 	@Override
 	public int enAttente() {
-		return sStillRess.n();
+		return _att;
 	}
 
 	@Override
