@@ -56,23 +56,23 @@ public class ProdCons implements Tampon {
 		return _size;
 	}
 
-	public void put(_Producteur cons, Message message)
+	public void put(_Producteur prod, Message message)
 	{
-		if(TestProdCons.getSortie()!=0) System.out.println("P"+cons.identification()+" : Ready to produce");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+prod.identification()+" : Ready to produce");
 		// Semaphore Prod, garanti qu'un seul Producteur  produit à la fois + fifo
 		sProd.p();
 
 		// Demande un emplacement libre
 		sEmptyRess.p();
 		
-		if(TestProdCons.getSortie()!=0) System.out.println("P"+cons.identification()+" : Have produced");
-
 		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
 		sBuff.p();
 
 		_buff[_N] = message;
 		_N = (_N+1)%_size;
 		_att++;
+		
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+prod.identification()+" : Have produced");
 
 		// Alloue une ressource
 		sStillRess.v();

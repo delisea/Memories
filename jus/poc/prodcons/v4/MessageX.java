@@ -1,10 +1,10 @@
 package jus.poc.prodcons.v4;
 
-public class GMessage implements jus.poc.prodcons.Message {
+public class MessageX implements jus.poc.prodcons.Message {
 	String _msg;
 	int _exRestants;
 
-	public GMessage(String msg, int NbEx)
+	public MessageX(String msg, int NbEx)
 	{
 		_msg = msg;
 		_exRestants = NbEx;
@@ -15,12 +15,12 @@ public class GMessage implements jus.poc.prodcons.Message {
 		return _msg;
 	}
 	
-	public GMessage consume(){
+	public MessageX consume(){
 		_exRestants--;
 		if(_exRestants>0)
-			return new GMessage(_msg, 1);
+			return new MessageX(_msg, 1);
 		else {
-			GMessage ret =  new GMessage(_msg, 1);
+			MessageX ret =  new MessageX(_msg, 1);
 			_msg = "";
 			return ret;
 		}

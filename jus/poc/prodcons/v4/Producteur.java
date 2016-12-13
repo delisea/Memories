@@ -1,7 +1,7 @@
 package jus.poc.prodcons.v4;
 import jus.poc.prodcons.*;
 
-public class FProd extends Acteur implements _Producteur {
+public class Producteur extends Acteur implements _Producteur {
 
 	private static int _processing = 0;
 
@@ -24,7 +24,7 @@ public class FProd extends Acteur implements _Producteur {
 	private static Aleatoire RANDPRODM = new Aleatoire(2, 1);
 	private static Aleatoire RANDPRODE = new Aleatoire(2, 1);
 
-	Buffer_circ _buffer;
+	ProdCons _buffer;
 	int _nbM;
 
 	Observateur _obs;
@@ -33,7 +33,7 @@ public class FProd extends Acteur implements _Producteur {
 	static int _NbEx;
 	static int _dNbEx;
 
-	public FProd(Buffer_circ buffer, Observateur observateur) throws ControlException
+	public Producteur(ProdCons buffer, Observateur observateur) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
 		observateur.newProducteur(this);
@@ -55,7 +55,7 @@ public class FProd extends Acteur implements _Producteur {
 	protected void produce() throws ControlException
 	{
 		int nbE = RANDPRODE.next();
-		GMessage message = new GMessage(nombreDeMessages() + ";Hi! I'm " + identification(), nbE);
+		MessageX message = new MessageX("Je suis le producteur "+identification()+" et ceci est mon message n°"+nombreDeMessages(), nbE);
 		int delai = RANDPRODT.next()*1;
 		try {
 			sleep(delai*1);
@@ -97,7 +97,7 @@ public class FProd extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(identification() + "P: je dÃ©marre et j'ai " + _nbM + " paquets.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je démarre et j'ai " + _nbM + " messages à produire.");
 		while(_nbM>0)
 		{
 			try {
@@ -113,7 +113,7 @@ public class FProd extends Acteur implements _Producteur {
 	    {
 	      _buffer.close();
 	    }
-	    System.out.println(identification() + "P: je part.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je m'en vais.");
 	}
 
 }

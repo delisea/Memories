@@ -4,7 +4,7 @@ import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 
-public class Buffer_circ implements Tampon {
+public class ProdCons implements Tampon {
 
 	static public final Object Global_lock = new Object();
 
@@ -13,7 +13,7 @@ public class Buffer_circ implements Tampon {
 	static public final Object _lockP = new Object();
 	static public final Object _lockC = new Object();
 
-	GMessage[] _buff;
+	MessageX[] _buff;
 	int _size;
 	int _S;
 	int _N;
@@ -21,10 +21,10 @@ public class Buffer_circ implements Tampon {
 
 	boolean _closed;
 
-	public Buffer_circ(int size)
+	public ProdCons(int size)
 	{
 		_size = size;
-		_buff = new GMessage[size];
+		_buff = new MessageX[size];
 		_S = 0;
 		_N = 0;
 		_att = 0;
@@ -48,7 +48,7 @@ public class Buffer_circ implements Tampon {
 	@Override
 	public void put(_Producteur arg0, Message arg1) {
 
-			putX(arg0, new GMessage(arg1.toString(), 1));
+			putX(arg0, new MessageX(arg1.toString(), 1));
 	}
 
 	@Override
@@ -62,14 +62,15 @@ public class Buffer_circ implements Tampon {
 	private Semaphore sStillRess = new Semaphore(0);
 	private Semaphore sEmptyRess = new Semaphore(/*_size*/5);
 	private Object LectLock = new Object();
-	public void putX(_Producteur prod, GMessage message)
-	{System.out.println(prod.identification()+" want write");
+	public void putX(_Producteur prod, MessageX message)
+	{
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+prod.identification()+" : Ready to produce");
 		// Semaphore Prod, garanti qu'un seul Producteur  produit à la fois + fifo
 		sProd.p();
 
 		// Demande un emplacement libre
-		sEmptyRess.p();System.out.println(prod.identification()+" is writing");
-
+		sEmptyRess.p();
+		
 		// Semaphore _buff, garanti qu'un seul acteur à la fois manipule le buffer
 		sBuff.p();
 
@@ -79,6 +80,8 @@ public class Buffer_circ implements Tampon {
 		_buff[_N] = message;
 		_N = (_N+1)%_size;
 		_att++;
+
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+prod.identification()+" : Have produced");
 
 		sBuff.v();
 
@@ -95,9 +98,10 @@ public class Buffer_circ implements Tampon {
 	}
 
 	public Message get(_Consommateur cons)
-	{System.out.println(cons.identification()+" want read");
-		GMessage ret;
-		GMessage temp;
+	{
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+cons.identification()+" : Ready to read");
+		MessageX ret;
+		MessageX temp;
 		// Semaphore Prod, garanti qu'un seul Consommateur consome à la fois + fifo
 		sCons.p();
 
@@ -108,7 +112,7 @@ public class Buffer_circ implements Tampon {
 		}
 
 		// Demande une ressource
-		sStillRess.p();System.out.println(cons.identification()+" is readding");
+		sStillRess.p();
 
 		if(_att == 0)
 		{
@@ -125,6 +129,8 @@ public class Buffer_circ implements Tampon {
 		{
 			_att--;
 			_S = (_S+1)%_size;
+			
+			if(TestProdCons.getSortie()!=0) System.out.println("C"+cons.identification()+" : Reading -> " + ret);
 
 			// Alloue un emplacement vide
 			sEmptyRess.v();

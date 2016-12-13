@@ -79,12 +79,7 @@ public class TestProdCons extends Simulateur {
 		return sortie;
 	}
 	
-	/**
-	* Retreave the parameters of the application.
-	* @param file the final name of the file containing the options.
-	*/
 	protected static void init(String file) {
-		// retreave the parameters of the application
 		final class Properties extends java.util.Properties{
 			private static final long serialVersionUID = 1L;
 			public int get(String key){
