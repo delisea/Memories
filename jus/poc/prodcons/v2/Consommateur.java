@@ -6,16 +6,16 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
 
-public class FCons extends Acteur implements _Consommateur {
+public class Consommateur extends Acteur implements _Consommateur {
 
 	private static Aleatoire RANDCONS = new Aleatoire(5, 2);
 
 	int _nbM;
-	Buffer_circ _buffer;
+	ProdCons _buffer;
 	private static int _TM;
 	private static int _TdM;
 
-	public FCons(Buffer_circ buffer, Observateur observateur) throws ControlException
+	public Consommateur(ProdCons buffer, Observateur observateur) throws ControlException
 	{
 		super(Acteur.typeConsommateur, observateur, _TM, _TdM);
 		_nbM = 0;
@@ -70,14 +70,14 @@ public class FCons extends Acteur implements _Consommateur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(identification() + "C: je d√©marre");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : DÈmarre");
 
 		Message ret;
 		do
 		{
 			ret = consume();
 		} while(ret != null);
-		System.out.println(identification() + "C: I leave");
+		if(TestProdCons.getSortie()!=0) System.out.println("C"+identification()+" : Leaving");
 
 	}
 

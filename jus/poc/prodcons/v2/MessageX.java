@@ -1,9 +1,9 @@
 package jus.poc.prodcons.v2;
 
-public class GMessage implements jus.poc.prodcons.Message {
+public class MessageX implements jus.poc.prodcons.Message {
 	String _msg;
 
-	public GMessage(String msg)
+	public MessageX(String msg)
 	{
 		_msg = msg;
 	}

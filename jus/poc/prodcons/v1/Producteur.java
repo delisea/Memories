@@ -4,8 +4,9 @@ import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Producteur;
+import jus.poc.prodcons.v2.MessageX;
 
-public class FProd extends Acteur implements _Producteur {
+public class Producteur extends Acteur implements _Producteur {
 
 	private static int _processing = 0;
 
@@ -26,13 +27,13 @@ public class FProd extends Acteur implements _Producteur {
 
 	private static Aleatoire RANDPROD = new Aleatoire(2, 1);
 
-	Buffer_circ _buffer;
+	ProdCons _buffer;
 	int _nbM;
 	int _dM;
 	private static int _TM;
 	private static int _TdM;
 
-	public FProd(Buffer_circ buffer, Observateur observateur, int nombreMoyenDeProduction, int deviationNombreDeProduction) throws ControlException
+	public Producteur(ProdCons buffer, Observateur observateur, int nombreMoyenDeProduction, int deviationNombreDeProduction) throws ControlException
 	{
 		super(Acteur.typeProducteur, observateur, _TM, _TdM);
 		_nbM = Aleatoire.valeur(nombreMoyenDeProduction, deviationNombreDeProduction);
@@ -52,7 +53,7 @@ public class FProd extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		_buffer.put(this, new GMessage(nombreDeMessages() + ";Hi! I'm " + identification()));
+		_buffer.put(this, new MessageX("Je suis le producteur "+identification()+" et ceci est mon message n°"+nombreDeMessages()));
 		_nbM--;
 	}
 
@@ -85,7 +86,7 @@ public class FProd extends Acteur implements _Producteur {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(identification() + "P: je dÃ©marre et j'ai " + _nbM + " paquets.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je démarre et j'ai " + _nbM + " messages à produire.");
 		while(_nbM>0)
 		{
 			produce();
@@ -94,7 +95,7 @@ public class FProd extends Acteur implements _Producteur {
 		remove_processing();
 		if(get_processing() == 0)
 			_buffer.close();
-		System.out.println(identification() + "P: je part.");
+		if(TestProdCons.getSortie()!=0) System.out.println("P"+identification()+" : Je m'en vais.");
 
 		synchronized(_buffer)
 		{
